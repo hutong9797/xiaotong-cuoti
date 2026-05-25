@@ -1,5 +1,6 @@
 export default async function handler(req, res) {
-  // 璁剧疆 CORS 澶?  res.setHeader('Access-Control-Allow-Origin', '*');
+  // 设置 CORS 头
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -12,18 +13,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 鎺ユ敹鍓嶇浼犳潵鐨?base64 鍥剧墖鏁版嵁
+    // 接收前端传来的 base64 图片数据
     const { image } = req.body;
 
     if (!image) {
       return res.status(400).json({ error: 'Missing image field' });
     }
 
-    // 鍘绘帀 data:xxx;base64, 鍓嶇紑锛屾嬁鍒扮函 base64
+    // 去掉 data:xxx;base64, 前缀，拿到纯 base64
     const pureBase64 = image.includes(',') ? image.split(',')[1] : image;
     const buffer = Buffer.from(pureBase64, 'base64');
 
-    // 杞彂鍒?EasyOCR API锛堜娇鐢?node-fetch 鍜?form-data锛?    const FormData = require('form-data');
+    // 转发到 EasyOCR API
+    const FormData = require('form-data');
     const fetch = require('node-fetch');
     const form = new FormData();
     form.append('file', buffer, {
