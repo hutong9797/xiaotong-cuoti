@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>鏅撳饯鐨勯敊棰樻湰</title>
+<title>晓彤的错题本</title>
 <style>
 :root {
   --bg: #f0f4f8;
@@ -25,9 +25,7 @@
   --transition: .2s ease;
   --sidebar-w: 240px;
 }
-
 * { margin:0; padding:0; box-sizing:border-box; }
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
   background: var(--bg);
@@ -35,13 +33,8 @@ body {
   line-height: 1.6;
   min-height: 100vh;
 }
-
 /* ===== Layout ===== */
-.app-layout {
-  display: flex;
-  min-height: 100vh;
-}
-
+.app-layout { display: flex; min-height: 100vh; }
 /* ===== Sidebar ===== */
 .sidebar {
   width: var(--sidebar-w);
@@ -50,14 +43,11 @@ body {
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  top: 0; left: 0; bottom: 0;
   z-index: 100;
   overflow-y: auto;
   transition: transform .25s ease;
 }
-
 .sidebar-brand {
   padding: 24px 20px 16px;
   border-bottom: 1px solid var(--border);
@@ -65,912 +55,367 @@ body {
   align-items: center;
   gap: 10px;
 }
-
 .sidebar-brand .brand-icon {
-  width: 36px;
-  height: 36px;
+  width: 36px; height: 36px;
   background: var(--primary);
   border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: #fff;
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: #fff; flex-shrink: 0;
 }
-
-.sidebar-brand .brand-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -.3px;
-}
-
-.sidebar-brand .brand-sub {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: -2px;
-}
-
+.sidebar-brand .brand-name { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -.3px; }
+.sidebar-brand .brand-sub { font-size: 11px; color: var(--text-muted); margin-top: -2px; }
 .sidebar-section-title {
   padding: 18px 20px 8px;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-  font-weight: 600;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); font-weight: 600;
 }
-
 .sidebar-notebooks {
-  flex: 1;
-  padding: 0 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex: 1; padding: 0 12px;
+  display: flex; flex-direction: column; gap: 2px;
   overflow-y: auto;
 }
-
 .nb-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px;
+  cursor: pointer; font-size: 14px; font-weight: 500;
   color: var(--text-secondary);
-  transition: var(--transition);
-  position: relative;
-  user-select: none;
+  transition: var(--transition); position: relative; user-select: none;
 }
-
 .nb-item:hover { background: #f3f4f6; color: var(--text); }
-
-.nb-item.active {
-  background: var(--primary-light);
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.nb-item .nb-icon {
-  font-size: 16px;
-  flex-shrink: 0;
-  opacity: .7;
-}
-
+.nb-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+.nb-item .nb-icon { font-size: 16px; flex-shrink: 0; opacity: .7; }
 .nb-item.active .nb-icon { opacity: 1; color: var(--primary); }
-
-.nb-item .nb-name {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
+.nb-item .nb-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nb-item .nb-badge {
-  font-size: 12px;
-  background: #f3f4f6;
-  padding: 2px 8px;
-  border-radius: 10px;
-  color: var(--text-secondary);
-  font-weight: 500;
-  min-width: 24px;
-  text-align: center;
-  flex-shrink: 0;
+  font-size: 12px; background: #f3f4f6; padding: 2px 8px; border-radius: 10px;
+  color: var(--text-secondary); font-weight: 500; min-width: 24px; text-align: center; flex-shrink: 0;
 }
-
-.nb-item.active .nb-badge {
-  background: #dde3fd;
-  color: var(--primary);
-}
-
+.nb-item.active .nb-badge { background: #dde3fd; color: var(--primary); }
 .nb-item .nb-delete {
-  display: none;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-  color: var(--text-muted);
-  flex-shrink: 0;
-  padding: 2px;
-  border-radius: 4px;
+  display: none; font-size: 16px; line-height: 1; cursor: pointer;
+  color: var(--text-muted); flex-shrink: 0; padding: 2px; border-radius: 4px;
 }
-
 .nb-item:hover .nb-delete { display: block; }
-
 .nb-item .nb-delete:hover { color: var(--danger); background: #fde8e8; }
-
 .nb-item.active .nb-delete { color: var(--danger); }
-
-/* New notebook input in sidebar */
-.new-nb-row {
-  padding: 8px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
+.new-nb-row { padding: 8px 12px; display: flex; flex-direction: column; gap: 8px; }
 .new-nb-row input {
-  padding: 8px 12px;
-  border: 1.5px solid var(--primary);
-  border-radius: 8px;
-  font-size: 13px;
-  outline: none;
-  font-family: inherit;
-  width: 100%;
+  padding: 8px 12px; border: 1.5px solid var(--primary); border-radius: 8px;
+  font-size: 13px; outline: none; font-family: inherit; width: 100%;
 }
-
 .new-nb-row input:focus { box-shadow: 0 0 0 3px rgba(79,110,247,.12); }
-
-.new-nb-row .row-btns {
-  display: flex;
-  gap: 6px;
-}
-
+.new-nb-row .row-btns { display: flex; gap: 6px; }
 .sidebar-add-btn {
-  margin: 6px 12px 12px;
-  padding: 9px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  background: transparent;
-  border: 1.5px dashed var(--border);
-  color: var(--text-secondary);
-  text-align: center;
-  transition: var(--transition);
-  font-family: inherit;
+  margin: 6px 12px 12px; padding: 9px 12px; border-radius: 8px;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  background: transparent; border: 1.5px dashed var(--border);
+  color: var(--text-secondary); text-align: center;
+  transition: var(--transition); font-family: inherit;
 }
-
-.sidebar-add-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: var(--primary-light);
-}
-
-.sidebar-footer {
-  padding: 12px 20px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
+.sidebar-add-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+.sidebar-footer { padding: 12px 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); }
 .sidebar-footer .settings-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  background: none;
-  border: none;
-  font-family: inherit;
-  transition: var(--transition);
-  width: 100%;
-  text-align: left;
+  display: flex; align-items: center; gap: 6px; cursor: pointer;
+  padding: 6px 10px; border-radius: 6px; font-size: 12px;
+  color: var(--text-secondary); background: none; border: none;
+  font-family: inherit; transition: var(--transition); width: 100%; text-align: left;
 }
-
 .sidebar-footer .settings-btn:hover { background: #f3f4f6; color: var(--primary); }
-
 /* ===== Main Content ===== */
-.main-content {
-  flex: 1;
-  margin-left: var(--sidebar-w);
-  padding: 24px 32px 40px;
-  min-width: 0;
-}
-
-.main-header {
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.main-header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -.5px;
-}
-
-.main-header .subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  display: block;
-  margin-top: 2px;
-}
-
-/* Mobile hamburger */
+.main-content { flex: 1; margin-left: var(--sidebar-w); padding: 24px 32px 40px; min-width: 0; }
+.main-header { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
+.main-header h1 { font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: -.5px; }
+.main-header .subtitle { font-size: 14px; color: var(--text-secondary); display: block; margin-top: 2px; }
 .hamburger {
-  display: none;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 24px;
-  color: var(--text);
-  border-radius: 8px;
+  display: none; width: 36px; height: 36px; align-items: center; justify-content: center;
+  border: none; background: none; cursor: pointer; font-size: 24px; color: var(--text); border-radius: 8px;
 }
-
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.4);
-  z-index: 99;
-}
-
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99; }
 /* ===== Settings Panel ===== */
 .settings-panel {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
-  display: none;
-  animation: slideDown .25s ease;
+  background: var(--card-bg); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: none; animation: slideDown .25s ease;
 }
-
 .settings-panel.open { display: block; }
-
-.settings-panel label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.settings-panel .input-row {
-  display: flex;
-  gap: 10px;
-}
-
+.settings-panel label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.settings-panel .input-row { display: flex; gap: 10px; }
 .settings-panel input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  outline: none;
-  font-family: inherit;
-  transition: var(--transition);
+  flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 14px; outline: none; font-family: inherit; transition: var(--transition);
 }
-
-.settings-panel input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79,110,247,.12);
-}
-
-.settings-panel .hint {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 8px;
-  line-height: 1.5;
-}
-
-.settings-panel .status {
-  font-size: 13px;
-  margin-top: 8px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  display: inline-block;
-}
-
+.settings-panel input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,110,247,.12); }
+.settings-panel .hint { font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+.settings-panel .status { font-size: 13px; margin-top: 8px; padding: 6px 10px; border-radius: 6px; display: inline-block; }
 .settings-panel .status.saved { background: #ecfdf5; color: #065f46; }
-
 .settings-panel .status.empty { background: #fefce8; color: #92400e; }
-
 /* ===== Buttons ===== */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 18px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: var(--transition);
-  font-family: inherit;
-  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px;
+  border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
+  cursor: pointer; border: none; transition: var(--transition); font-family: inherit; white-space: nowrap;
 }
-
-.btn-primary {
-  background: var(--primary);
-  color: #fff;
-}
-
+.btn-primary { background: var(--primary); color: #fff; }
 .btn-primary:hover { background: var(--primary-hover); }
-
 .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
-
-.btn-outline {
-  background: transparent;
-  border: 1.5px solid var(--border);
-  color: var(--text);
-}
-
+.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
 .btn-outline:hover { background: #f9fafb; }
-
-.btn-danger {
-  background: var(--danger-light);
-  color: var(--danger);
-}
-
+.btn-danger { background: var(--danger-light); color: var(--danger); }
 .btn-danger:hover { background: #fde8e8; }
-
 .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; }
-
 /* ===== Upload Zone ===== */
 .upload-zone {
-  background: var(--card-bg);
-  border: 2px dashed var(--border);
-  border-radius: var(--radius);
-  padding: 36px 24px;
-  text-align: center;
-  cursor: pointer;
-  transition: var(--transition);
-  margin-bottom: 20px;
+  background: var(--card-bg); border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 36px 24px; text-align: center; cursor: pointer; transition: var(--transition); margin-bottom: 20px;
 }
-
-.upload-zone:hover,
-.upload-zone.drag-over {
-  border-color: var(--primary);
-  background: var(--primary-light);
-}
-
-.upload-zone .upload-icon {
-  font-size: 40px;
-  margin-bottom: 8px;
-  color: var(--text-muted);
-}
-
+.upload-zone:hover, .upload-zone.drag-over { border-color: var(--primary); background: var(--primary-light); }
+.upload-zone .upload-icon { font-size: 40px; margin-bottom: 8px; color: var(--text-muted); }
 .upload-zone.drag-over .upload-icon { color: var(--primary); }
-
-.upload-zone .upload-text {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.upload-zone .upload-hint {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
+.upload-zone .upload-text { font-size: 15px; font-weight: 500; color: var(--text-secondary); }
+.upload-zone .upload-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 .upload-zone input[type=file] { display: none; }
-
 /* ===== Preview Area ===== */
 .preview-area {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
-  display: none;
-  animation: slideDown .25s ease;
+  background: var(--card-bg); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: none; animation: slideDown .25s ease;
 }
-
 .preview-area.active { display: block; }
-
-.preview-area .preview-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.preview-area .preview-title {
-  font-weight: 600;
-  font-size: 15px;
-}
-
+.preview-area .preview-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.preview-area .preview-title { font-weight: 600; font-size: 15px; }
 .preview-area .preview-img {
-  max-width: 100%;
-  max-height: 320px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  display: block;
-  margin: 0 auto;
-  object-fit: contain;
+  max-width: 100%; max-height: 320px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); display: block; margin: 0 auto; object-fit: contain;
 }
-
-.preview-area .preview-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.preview-area .preview-size {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 8px;
-}
-
+.preview-area .preview-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+.preview-area .preview-size { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
 .preview-area .loading-indicator {
-  display: none;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 18px;
-  background: var(--primary-light);
-  border-radius: var(--radius-sm);
-  margin-top: 14px;
+  display: none; align-items: center; gap: 10px; padding: 12px 18px;
+  background: var(--primary-light); border-radius: var(--radius-sm); margin-top: 14px;
 }
-
 .preview-area .loading-indicator.active { display: flex; }
-
-.loading-text {
-  font-size: 14px;
-  color: var(--primary);
-  font-weight: 500;
-}
-
+.loading-text { font-size: 14px; color: var(--primary); font-weight: 500; }
 /* ===== Search ===== */
-.search-bar {
-  position: relative;
-  margin-bottom: 14px;
-}
-
+.search-bar { position: relative; margin-bottom: 14px; }
 .search-bar input {
-  width: 100%;
-  padding: 10px 14px 10px 38px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  outline: none;
-  font-family: inherit;
-  background: var(--card-bg);
-  transition: var(--transition);
+  width: 100%; padding: 10px 14px 10px 38px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-size: 14px; outline: none; font-family: inherit;
+  background: var(--card-bg); transition: var(--transition);
 }
-
-.search-bar input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79,110,247,.08);
-}
-
+.search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,110,247,.08); }
 .search-bar input::placeholder { color: var(--text-muted); }
-
-.search-bar .search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-  color: var(--text-muted);
-  pointer-events: none;
-}
-
+.search-bar .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text-muted); pointer-events: none; }
 /* ===== List Header ===== */
-.list-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.list-header h2 {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.list-header .count {
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-weight: 400;
-  margin-left: 6px;
-}
-
+.list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.list-header h2 { font-size: 18px; font-weight: 700; }
+.list-header .count { font-size: 13px; color: var(--text-secondary); font-weight: 400; margin-left: 6px; }
 /* ===== Empty State ===== */
-.empty-state {
-  text-align: center;
-  padding: 48px 20px;
-  color: var(--text-muted);
-}
-
+.empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); }
 .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
-
 .empty-state p { font-size: 14px; }
-
 /* ===== Card Grid ===== */
-.card-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
+.card-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
 .mistake-card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  padding: 18px 20px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
-  animation: fadeIn .3s ease;
-  transition: var(--transition);
+  background: var(--card-bg); border-radius: var(--radius); padding: 18px 20px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border); animation: fadeIn .3s ease; transition: var(--transition);
 }
-
 .mistake-card:hover { box-shadow: var(--shadow); }
-
-.mistake-card .card-top {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-
+.mistake-card .card-top { display: flex; gap: 14px; align-items: flex-start; }
 .mistake-card .card-thumb {
-  width: 100px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: var(--transition);
+  width: 100px; height: 80px; object-fit: cover; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); cursor: pointer; flex-shrink: 0; transition: var(--transition);
 }
-
 .mistake-card .card-thumb:hover { opacity: .85; }
-
 .mistake-card .card-info { flex: 1; min-width: 0; }
-
 .mistake-card .card-ocr {
-  font-size: 14px;
-  color: var(--text);
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-bottom: 8px;
+  font-size: 14px; color: var(--text); line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px;
 }
-
-.mistake-card .card-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-
-.mistake-card .tag {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
+.mistake-card .card-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.mistake-card .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; white-space: nowrap; }
 .tag-subject { background: #eef1fe; color: #4f6ef7; }
-
 .tag-difficulty { background: #fef3c7; color: #92400e; }
 .tag-difficulty.easy { background: #ecfdf5; color: #065f46; }
 .tag-difficulty.hard { background: #fef2f2; color: #991b1b; }
-
 .tag-kp { background: #f3f4f6; color: #374151; }
-
 .tag-notebook { background: #ede9fe; color: #7c3aed; }
-
 .mistake-card .card-analysis {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 8px;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-
-.mistake-card .card-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-}
-
-.mistake-card .card-time {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
+.mistake-card .card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.mistake-card .card-time { font-size: 12px; color: var(--text-muted); }
 .mistake-card .card-actions { display: flex; gap: 8px; }
-
 /* ===== Image Modal ===== */
 .modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  animation: fadeIn .2s ease;
-  padding: 20px;
+  position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex;
+  align-items: center; justify-content: center; z-index: 2000; animation: fadeIn .2s ease; padding: 20px;
 }
-
-.modal-overlay .modal-img {
-  max-width: 92vw;
-  max-height: 85vh;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
-}
-
+.modal-overlay .modal-img { max-width: 92vw; max-height: 85vh; border-radius: var(--radius); box-shadow: var(--shadow-lg); cursor: pointer; }
 .modal-overlay .modal-close {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  background: rgba(255,255,255,.9);
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text);
-  transition: var(--transition);
+  position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.9); border: none;
+  width: 36px; height: 36px; border-radius: 50%; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; color: var(--text); transition: var(--transition);
 }
-
 .modal-overlay .modal-close:hover { background: #fff; }
-
 /* ===== Toast ===== */
 .toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--text);
-  color: #fff;
-  padding: 10px 22px;
-  border-radius: 20px;
-  font-size: 14px;
-  z-index: 3000;
-  animation: fadeIn .2s ease;
-  pointer-events: none;
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+  background: var(--text); color: #fff; padding: 10px 22px; border-radius: 20px;
+  font-size: 14px; z-index: 3000; animation: fadeIn .2s ease; pointer-events: none;
 }
-
 /* ===== Footer ===== */
-.footer-note {
-  text-align: center;
-  padding: 24px 0 8px;
-  font-size: 12px;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border);
-  margin-top: 32px;
-}
-
+.footer-note { text-align: center; padding: 24px 0 8px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 32px; }
 /* ===== Animations ===== */
-@keyframes slideDown {
-  from { opacity:0; transform:translateY(-8px); }
-  to { opacity:1; transform:translateY(0); }
-}
-
-@keyframes fadeIn {
-  from { opacity:0; }
-  to { opacity:1; }
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.spinner {
-  width: 18px; height: 18px;
-  border: 2px solid #e5e7eb;
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin .6s linear infinite;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
+@keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { width: 18px; height: 18px; border: 2px solid #e5e7eb; border-top-color: var(--primary); border-radius: 50%; animation: spin .6s linear infinite; display: inline-block; flex-shrink: 0; }
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
-  .sidebar {
-    transform: translateX(-100%);
-    box-shadow: var(--shadow-lg);
-  }
-
+  .sidebar { transform: translateX(-100%); box-shadow: var(--shadow-lg); }
   .sidebar.open { transform: translateX(0); }
-
   .sidebar-overlay.open { display: block; }
-
-  .main-content {
-    margin-left: 0;
-    padding: 16px 12px 30px;
-  }
-
+  .main-content { margin-left: 0; padding: 16px 12px 30px; }
   .hamburger { display: flex; }
-
   .main-header h1 { font-size: 22px; }
-
   .upload-zone { padding: 24px 16px; }
-
   .mistake-card .card-top { flex-direction: column; }
-
   .mistake-card .card-thumb { width: 100%; height: 160px; }
-
   .preview-area .preview-actions { flex-direction: column; }
-
   .preview-area .preview-actions .btn { width: 100%; justify-content: center; }
-
   .settings-panel .input-row { flex-direction: column; }
 }
 </style>
 </head>
 <body>
 <div class="app-layout">
-
-<!-- ====== 渚ц竟鏍?====== -->
+<!-- ====== 侧边栏 ====== -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <div class="brand-icon">&#128221;</div>
-    <div>
-      <div class="brand-name">鏅撳饯鐨勯敊棰樻湰</div>
-      <div class="brand-sub">鐭ヨ瘑绉疮 路 楂樻晥瀛︿範</div>
-    </div>
+  <div class="brand-icon">&#128221;</div>
+  <div>
+  <div class="brand-name">晓彤的错题本</div>
+  <div class="brand-sub">知识积累 · 高效学习</div>
   </div>
-
-  <div class="sidebar-section-title">閿欓鏈?/div>
-
+  </div>
+  <div class="sidebar-section-title">错题本</div>
   <div class="sidebar-notebooks" id="sidebarNotebooks"></div>
-
   <div id="newNbRow"></div>
-
-  <button class="sidebar-add-btn" id="sidebarAddBtn">+ 鏂板缓閿欓鏈?/button>
-
+  <button class="sidebar-add-btn" id="sidebarAddBtn">+ 新建错题本</button>
   <div class="sidebar-footer">
-    <button class="settings-btn" id="settingsBtn">
-      &#9881; DeepSeek API 璁剧疆
-    </button>
+  <button class="settings-btn" id="settingsBtn">
+  &#9881; DeepSeek API 设置
+  </button>
   </div>
 </aside>
-
-<!-- 绉诲姩绔伄缃?-->
+<!-- 移动端遮罩 -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<!-- ====== 涓诲唴瀹瑰尯 ====== -->
+<!-- ====== 主内容区 ====== -->
 <main class="main-content">
   <div class="main-header">
-    <div>
-      <button class="hamburger" id="hamburgerBtn" title="鎵撳紑渚ц竟鏍?>&#9776;</button>
-      <h1 style="display:inline-block;vertical-align:middle;margin-left:4px;">&#128221; 鏅撳饯鐨勯敊棰樻湰</h1>
-      <span class="subtitle">EasyOCR 璇嗗埆 + DeepSeek AI 鐭ヨ瘑鐐瑰垎鏋?/span>
-    </div>
+  <div>
+  <button class="hamburger" id="hamburgerBtn" title="打开侧边栏">&#9776;</button>
+  <h1 style="display:inline-block;vertical-align:middle;margin-left:4px;">&#128221; 晓彤的错题本</h1>
+  <span class="subtitle">EasyOCR 识别 + DeepSeek AI 知识点分析</span>
   </div>
-
-  <!-- 璁剧疆闈㈡澘 -->
+  </div>
+  <!-- 设置面板 -->
   <div class="settings-panel" id="settingsPanel">
-    <label for="apiKeyInput">DeepSeek API Key</label>
-    <div class="input-row">
-      <input type="password" id="apiKeyInput" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
-      <button class="btn btn-primary" id="saveApiKeyBtn">淇濆瓨</button>
-    </div>
-    <div class="hint">
-      瀵嗛挜浠呬繚瀛樺湪娴忚鍣ㄦ湰鍦帮紙localStorage锛夛紝涓嶄細涓婁紶鍒颁换浣曠涓夋柟鏈嶅姟鍣ㄣ€?br>
-      鑾峰彇 API Key锛?a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">platform.deepseek.com/api_keys</a> &nbsp;|&nbsp; OCR 浣跨敤鍏嶈垂鐨?EasyOCR API锛屾棤闇€棰濆閰嶇疆銆?
-    </div>
-    <div id="apiKeyStatus"></div>
+  <label for="apiKeyInput">DeepSeek API Key</label>
+  <div class="input-row">
+  <input type="password" id="apiKeyInput" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
+  <button class="btn btn-primary" id="saveApiKeyBtn">保存</button>
   </div>
-
-  <!-- 涓婁紶鍖?-->
+  <div class="hint">
+  密钥仅保存在浏览器本地（localStorage），不会上传到任何第三方服务器。<br>
+  获取 API Key：<a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">platform.deepseek.com/api_keys</a> &nbsp;|&nbsp; OCR 使用免费的 EasyOCR API，无需额外配置。
+  </div>
+  <div id="apiKeyStatus"></div>
+  </div>
+  <!-- 上传区 -->
   <div class="upload-zone" id="uploadZone">
-    <div class="upload-icon">&#128206;</div>
-    <div class="upload-text">鎷栨嫿鎴浘鍒版澶勶紝鎴栫偣鍑讳笂浼?/div>
-    <div class="upload-hint">鏀寔 JPG / PNG / WebP锛屽崟寮犱笉瓒呰繃 10MB</div>
-    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
+  <div class="upload-icon">&#128206;</div>
+  <div class="upload-text">拖拽截图到此处，或点击上传</div>
+  <div class="upload-hint">支持 JPG / PNG / WebP，单张不超过 10MB</div>
+  <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
   </div>
-
-  <!-- 棰勮 -->
+  <!-- 预览 -->
   <div class="preview-area" id="previewArea">
-    <div class="preview-header">
-      <span class="preview-title">鎴浘棰勮</span>
-      <button class="btn btn-outline btn-sm" id="cancelPreviewBtn">鍙栨秷</button>
-    </div>
-    <img class="preview-img" id="previewImg" alt="棰勮">
-    <div class="preview-size" id="previewSize"></div>
-    <div class="preview-actions">
-      <button class="btn btn-primary" id="startAnalyzeBtn">寮€濮嬪垎鏋?/button>
-    </div>
-    <div class="loading-indicator" id="loadingArea">
-      <span class="spinner"></span>
-      <span class="loading-text" id="loadingText">姝ｅ湪澶勭悊...</span>
-    </div>
+  <div class="preview-header">
+  <span class="preview-title">截图预览</span>
+  <button class="btn btn-outline btn-sm" id="cancelPreviewBtn">取消</button>
   </div>
-
-  <!-- 鎼滅储 -->
+  <img class="preview-img" id="previewImg" alt="预览">
+  <div class="preview-size" id="previewSize"></div>
+  <div class="preview-actions">
+  <button class="btn btn-primary" id="startAnalyzeBtn">开始分析</button>
+  </div>
+  <div class="loading-indicator" id="loadingArea">
+  <span class="spinner"></span>
+  <span class="loading-text" id="loadingText">正在处理...</span>
+  </div>
+  </div>
+  <!-- 搜索 -->
   <div class="search-bar" id="searchBar" style="display:none;">
-    <span class="search-icon">&#128269;</span>
-    <input type="text" id="searchInput" placeholder="鎼滅储棰樼洰鏂囧瓧銆佺煡璇嗙偣銆佸绉戙€侀敊棰樻湰...">
+  <span class="search-icon">&#128269;</span>
+  <input type="text" id="searchInput" placeholder="搜索题目文字、知识点、学科、错题本...">
   </div>
-
-  <!-- 鍒楄〃澶撮儴 -->
+  <!-- 列表头部 -->
   <div class="list-header">
-    <h2>閿欓鍒楄〃<span class="count" id="listCount">锛? 鏉★級</span></h2>
-    <button class="btn btn-danger btn-sm" id="clearAllBtn" style="display:none;">娓呯┖鍏ㄩ儴</button>
+  <h2>错题列表<span class="count" id="listCount">（0 条）</span></h2>
+  <button class="btn btn-danger btn-sm" id="clearAllBtn" style="display:none;">清空全部</button>
   </div>
-
-  <!-- 鍗＄墖缃戞牸 -->
+  <!-- 卡片网格 -->
   <div class="card-grid" id="cardGrid"></div>
   <div class="empty-state" id="emptyState">
-    <div class="empty-icon">&#128221;</div>
-    <p id="emptyText">杩樻病鏈夐敊棰橈紝涓婁紶绗竴寮犳埅鍥惧紑濮嬪惂</p>
+  <div class="empty-icon">&#128221;</div>
+  <p id="emptyText">还没有错题，上传第一张截图开始吧</p>
   </div>
-
-  <!-- 椤佃剼 -->
+  <!-- 页脚 -->
   <div class="footer-note">
-    閮ㄧ讲鍒?Vercel 鍗冲彲鍏綉璁块棶 &nbsp;|&nbsp; OCR 閫氳繃 Serverless Function 浠ｇ悊锛孉I 鍒嗘瀽鐢?DeepSeek 鎻愪緵
+  部署到 Vercel 即可全网访问 &nbsp;|&nbsp; OCR 通过 Serverless Function 代理，AI 分析由 DeepSeek 提供
   </div>
 </main>
-
 </div><!-- .app-layout -->
-
-<!-- 澶у浘妯℃€佹 -->
+<!-- 大图模态框 -->
 <div class="modal-overlay" id="imageModal" style="display:none;">
   <button class="modal-close" id="modalClose">&times;</button>
-  <img class="modal-img" id="modalImg" alt="鏌ョ湅澶у浘">
+  <img class="modal-img" id="modalImg" alt="查看大图">
 </div>
-
 <script>
 (function() {
   'use strict';
-
-  // ============ 甯搁噺 ============
+  // ============ 常量 ============
   var STORAGE_KEY = 'mistake_book_data_v2';
   var SETTINGS_KEY = 'mistake_book_settings_v2';
   var MAX_IMAGE_BASE64 = 500000;
   var DEEPSEEK_API = 'https://api.deepseek.com/chat/completions';
-
-  // ============ 甯姪鍑芥暟 ============
+  // ============ 帮助函数 ============
   var $ = function(s, ctx) { return (ctx || document).querySelector(s); };
   var $$ = function(s, ctx) { return (ctx || document).querySelectorAll(s); };
-
   function formatDate(iso) {
     var d = new Date(iso), p = function(n) { return String(n).padStart(2,'0'); };
     return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
   }
-
   function formatBytes(b) {
     if (b < 1024) return b+' B';
     if (b < 1048576) return (b/1024).toFixed(1)+' KB';
     return (b/1048576).toFixed(1)+' MB';
   }
-
-  function escapeHtml(s) {
-    var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
-  }
-
+  function escapeHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
   function showToast(msg) {
     var el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
-    document.body.appendChild(el);
-    setTimeout(function(){ el.remove(); }, 2500);
+    document.body.appendChild(el); setTimeout(function(){ el.remove(); }, 2500);
   }
-
   function generateId(pre) { return (pre||'mb_') + Date.now() + '_' + Math.random().toString(36).slice(2,8); }
 
-  // ============ 鏁版嵁 ============
+  // ============ 数据 ============
   function loadData() {
     try {
       var r = localStorage.getItem(STORAGE_KEY);
       if (!r) return { notebooks:[], mistakes:[], activeNotebookId:null };
       var d = JSON.parse(r);
       if (Array.isArray(d)) {
-        var nb = { id:generateId('nb_'), name:'榛樿閿欓鏈?, createdAt:new Date().toISOString() };
+        var nb = { id:generateId('nb_'), name:'默认错题本', createdAt:new Date().toISOString() };
         d.forEach(function(m){ m.notebookId = nb.id; });
         return { notebooks:[nb], mistakes:d, activeNotebookId:null };
       }
@@ -980,20 +425,17 @@ body {
       return d;
     } catch(e) { return { notebooks:[], mistakes:[], activeNotebookId:null }; }
   }
-
   function saveData(d) {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
-    catch(e) { if (e.name==='QuotaExceededError') showToast('瀛樺偍绌洪棿涓嶈冻锛岃鍒犻櫎閮ㄥ垎閿欓'); }
+    catch(e) { if (e.name==='QuotaExceededError') showToast('存储空间不足，请删除部分错题'); }
   }
-
   function loadSettings() {
     try { var r = localStorage.getItem(SETTINGS_KEY); return r ? JSON.parse(r) : { apiKey:'' }; }
     catch(e) { return { apiKey:'' }; }
   }
-
   function saveSettings(s) { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch(e) {} }
 
-  // ============ 缂撳瓨 DOM ============
+  // ============ 缓存 DOM ============
   var sidebar = $('#sidebar');
   var sidebarOverlay = $('#sidebarOverlay');
   var hamburgerBtn = $('#hamburgerBtn');
@@ -1024,39 +466,32 @@ body {
   var modalImg = $('#modalImg');
   var modalClose = $('#modalClose');
   var newNbRow = $('#newNbRow');
-
   var currentImageBase64 = null;
   var isProcessing = false;
 
-  // ============ 渚ц竟鏍?============
+  // ============ 侧边栏 ============
   function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); }
   function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); }
-
   hamburgerBtn.addEventListener('click', openSidebar);
   sidebarOverlay.addEventListener('click', closeSidebar);
 
-  // ============ 閿欓鏈覆鏌?============
+  // ============ 错题本渲染 ============
   function getNbName(id) {
     var d = loadData();
     var nb = d.notebooks.find(function(n){ return n.id === id; });
-    return nb ? nb.name : '鏈煡';
+    return nb ? nb.name : '未知';
   }
-
   function getNbCount(id) {
     return loadData().mistakes.filter(function(m){ return m.notebookId === id; }).length;
   }
-
   function renderSidebar() {
     var d = loadData();
     sidebarNotebooks.innerHTML = '';
-
-    // 鍏ㄩ儴
     var allItem = document.createElement('div');
     allItem.className = 'nb-item' + (d.activeNotebookId === null ? ' active' : '');
-    allItem.innerHTML = '<span class="nb-icon">&#128451;</span><span class="nb-name">鍏ㄩ儴閿欓</span><span class="nb-badge">' + d.mistakes.length + '</span>';
+    allItem.innerHTML = '<span class="nb-icon">&#128451;</span><span class="nb-name">全部错题</span><span class="nb-badge">' + d.mistakes.length + '</span>';
     allItem.addEventListener('click', function(){ setActive(null); });
     sidebarNotebooks.appendChild(allItem);
-
     d.notebooks.forEach(function(nb){
       var item = document.createElement('div');
       item.className = 'nb-item' + (d.activeNotebookId === nb.id ? ' active' : '');
@@ -1065,7 +500,7 @@ body {
         '<span class="nb-icon">&#128213;</span>' +
         '<span class="nb-name">' + escapeHtml(nb.name) + '</span>' +
         '<span class="nb-badge">' + count + '</span>' +
-        '<span class="nb-delete" title="鍒犻櫎閿欓鏈?>&times;</span>';
+        '<span class="nb-delete" title="删除错题本">&times;</span>';
       item.querySelector('.nb-delete').addEventListener('click', function(e){
         e.stopPropagation(); delNotebook(nb.id);
       });
@@ -1076,200 +511,134 @@ body {
       sidebarNotebooks.appendChild(item);
     });
   }
-
   function setActive(nbId) {
-    var d = loadData();
-    d.activeNotebookId = nbId;
-    saveData(d);
-    renderSidebar();
-    renderList();
+    var d = loadData(); d.activeNotebookId = nbId; saveData(d); renderSidebar(); renderList();
   }
-
   function createNb(name) {
     var d = loadData();
-    if (d.notebooks.some(function(n){ return n.name === name; })) {
-      showToast('閿欓鏈悕绉板凡瀛樺湪');
-      return false;
-    }
+    if (d.notebooks.some(function(n){ return n.name === name; })) { showToast('错题本名称已存在'); return false; }
     d.notebooks.push({ id:generateId('nb_'), name:name, createdAt:new Date().toISOString() });
-    saveData(d);
-    renderSidebar();
-    showToast('宸插垱寤恒€? + name + '銆?);
-    return true;
+    saveData(d); renderSidebar(); showToast('已创建「' + name + '」'); return true;
   }
-
   function delNotebook(nbId) {
     var d = loadData();
     var nb = d.notebooks.find(function(n){ return n.id === nbId; });
     if (!nb) return;
     var count = d.mistakes.filter(function(m){ return m.notebookId === nbId; }).length;
-    if (!confirm('纭畾鍒犻櫎閿欓鏈€? + nb.name + '銆嶅悧锛焅n鍏朵腑鐨?' + count + ' 鏉￠敊棰樹篃灏嗕竴骞跺垹闄わ紝涓嶅彲鎭㈠銆?)) return;
+    if (!confirm('确定删除错题本「' + nb.name + '」吗？\n其中的 ' + count + ' 条错题也将一并删除，不可恢复。')) return;
     d.notebooks = d.notebooks.filter(function(n){ return n.id !== nbId; });
     d.mistakes = d.mistakes.filter(function(m){ return m.notebookId !== nbId; });
     if (d.activeNotebookId === nbId) d.activeNotebookId = null;
-    saveData(d);
-    renderSidebar();
-    renderList();
-    showToast('宸插垹闄ゃ€? + nb.name + '銆?);
+    saveData(d); renderSidebar(); renderList(); showToast('已删除「' + nb.name + '」');
   }
-
   function showNewNbInput() {
     newNbRow.innerHTML = '';
-    var div = document.createElement('div');
-    div.className = 'new-nb-row';
-    var inp = document.createElement('input');
-    inp.type = 'text'; inp.placeholder = '杈撳叆鍚嶇О'; inp.maxLength = 20;
-    var btns = document.createElement('div');
-    btns.className = 'row-btns';
-    var ok = document.createElement('button');
-    ok.className = 'btn btn-primary btn-sm'; ok.textContent = '鍒涘缓';
-    var cancel = document.createElement('button');
-    cancel.className = 'btn btn-outline btn-sm'; cancel.textContent = '鍙栨秷';
+    var div = document.createElement('div'); div.className = 'new-nb-row';
+    var inp = document.createElement('input'); inp.type = 'text'; inp.placeholder = '输入名称'; inp.maxLength = 20;
+    var btns = document.createElement('div'); btns.className = 'row-btns';
+    var ok = document.createElement('button'); ok.className = 'btn btn-primary btn-sm'; ok.textContent = '创建';
+    var cancel = document.createElement('button'); cancel.className = 'btn btn-outline btn-sm'; cancel.textContent = '取消';
     function done() { newNbRow.innerHTML = ''; }
-    ok.addEventListener('click', function(){
-      var n = inp.value.trim(); if (!n) { showToast('璇疯緭鍏ュ悕绉?); return; }
-      if (createNb(n)) done();
-    });
+    ok.addEventListener('click', function(){ var n = inp.value.trim(); if (!n) { showToast('请输入名称'); return; } if (createNb(n)) done(); });
     cancel.addEventListener('click', done);
-    inp.addEventListener('keydown', function(e){
-      if (e.key === 'Enter') ok.click();
-      if (e.key === 'Escape') done();
-    });
-    btns.appendChild(ok); btns.appendChild(cancel);
-    div.appendChild(inp); div.appendChild(btns);
-    newNbRow.appendChild(div);
-    inp.focus();
+    inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') ok.click(); if (e.key === 'Escape') done(); });
+    btns.appendChild(ok); btns.appendChild(cancel); div.appendChild(inp); div.appendChild(btns); newNbRow.appendChild(div); inp.focus();
   }
-
   sidebarAddBtn.addEventListener('click', showNewNbInput);
 
-  // ============ 璁剧疆闈㈡澘 ============
-  settingsBtn.addEventListener('click', function(){
-    settingsPanel.classList.toggle('open');
-  });
-
+  // ============ 设置面板 ============
+  settingsBtn.addEventListener('click', function(){ settingsPanel.classList.toggle('open'); });
   function updateSettingsUI() {
-    var s = loadSettings();
-    apiKeyInput.value = s.apiKey || '';
-    if (s.apiKey) apiKeyStatus.innerHTML = '<span class="status saved">API Key 宸蹭繚瀛?/span>';
-    else { apiKeyStatus.innerHTML = '<span class="status empty">灏氭湭璁剧疆 API Key锛孉I 鐭ヨ瘑鐐瑰垎鏋愬姛鑳戒笉鍙敤</span>'; settingsPanel.classList.add('open'); }
+    var s = loadSettings(); apiKeyInput.value = s.apiKey || '';
+    if (s.apiKey) apiKeyStatus.innerHTML = '<span class="status saved">API Key 已保存</span>';
+    else { apiKeyStatus.innerHTML = '<span class="status empty">尚未设置 API Key，AI 知识点分析功能不可用</span>'; settingsPanel.classList.add('open'); }
   }
-
   saveApiKeyBtn.addEventListener('click', function(){
-    var k = apiKeyInput.value.trim();
-    saveSettings({ apiKey: k });
-    updateSettingsUI();
-    showToast(k ? 'API Key 宸蹭繚瀛? : 'API Key 宸叉竻闄?);
+    var k = apiKeyInput.value.trim(); saveSettings({ apiKey: k }); updateSettingsUI();
+    showToast(k ? 'API Key 已保存' : 'API Key 已清除');
   });
 
-  // ============ 鍒楄〃娓叉煋 ============
+  // ============ 列表渲染 ============
   function getSearchKw() { return (searchInput.value||'').trim().toLowerCase(); }
-
   function renderList() {
-    var d = loadData();
-    var kw = getSearchKw();
-
+    var d = loadData(); var kw = getSearchKw();
     var filtered = d.mistakes;
-    if (d.activeNotebookId !== null) {
-      filtered = filtered.filter(function(m){ return m.notebookId === d.activeNotebookId; });
-    }
+    if (d.activeNotebookId !== null) { filtered = filtered.filter(function(m){ return m.notebookId === d.activeNotebookId; }); }
     var searched = kw
       ? filtered.filter(function(m){
           var h = [m.ocrText||'', m.subject||'', m.analysis||'', (m.knowledgePoints||[]).join(' '), getNbName(m.notebookId)].join(' ').toLowerCase();
           return h.indexOf(kw) !== -1;
         })
       : filtered;
-
     searchBar.style.display = d.mistakes.length > 0 ? 'block' : 'none';
     cardGrid.innerHTML = '';
-    listCount.textContent = kw
-      ? '锛堝尮閰?' + searched.length + ' / ' + filtered.length + ' 鏉★級'
-      : '锛? + filtered.length + ' 鏉★級';
-
+    listCount.textContent = kw ? '（匹配 ' + searched.length + ' / ' + filtered.length + ' 条）' : '（' + filtered.length + ' 条）';
     if (searched.length === 0) {
       emptyState.style.display = 'block';
-      if (kw) emptyText.textContent = '鏆傛棤鍖归厤閿欓锛岃瘯璇曞叾浠栧叧閿瘝';
-      else if (filtered.length === 0) emptyText.textContent = d.activeNotebookId !== null ? '璇ラ敊棰樻湰涓繕娌℃湁閿欓' : '杩樻病鏈夐敊棰橈紝涓婁紶绗竴寮犳埅鍥惧紑濮嬪惂';
-      else emptyText.textContent = '鏆傛棤閿欓';
+      if (kw) emptyText.textContent = '暂无匹配错题，试试其他关键词';
+      else if (filtered.length === 0) emptyText.textContent = d.activeNotebookId !== null ? '该错题本中还没有错题' : '还没有错题，上传第一张截图开始吧';
+      else emptyText.textContent = '暂无错题';
       clearAllBtn.style.display = 'none';
     } else {
-      emptyState.style.display = 'none';
-      clearAllBtn.style.display = 'inline-flex';
-      clearAllBtn.textContent = d.activeNotebookId !== null ? '娓呯┖鏈敊棰樻湰' : '娓呯┖鍏ㄩ儴';
+      emptyState.style.display = 'none'; clearAllBtn.style.display = 'inline-flex';
+      clearAllBtn.textContent = d.activeNotebookId !== null ? '清空本错题本' : '清空全部';
     }
-
     searched.forEach(function(item){
-      var diffClass = item.difficulty === '绠€鍗? ? 'easy' : item.difficulty === '鍥伴毦' ? 'hard' : '';
-      var kpTags = (item.knowledgePoints||[]).map(function(kp){
-        return '<span class="tag tag-kp">' + escapeHtml(kp) + '</span>';
-      }).join('');
+      var diffClass = item.difficulty === '简单' ? 'easy' : item.difficulty === '困难' ? 'hard' : '';
+      var kpTags = (item.knowledgePoints||[]).map(function(kp){ return '<span class="tag tag-kp">' + escapeHtml(kp) + '</span>'; }).join('');
       var nbName = getNbName(item.notebookId);
-
-      var card = document.createElement('div');
-      card.className = 'mistake-card';
-      card.dataset.id = item.id;
+      var card = document.createElement('div'); card.className = 'mistake-card'; card.dataset.id = item.id;
       card.innerHTML =
         '<div class="card-top">' +
-          '<img class="card-thumb" src="' + item.imageBase64 + '" alt="缂╃暐鍥? data-full="' + item.imageBase64 + '">' +
-          '<div class="card-info">' +
-            '<div class="card-ocr">' + escapeHtml(item.ocrText||'(鏈瘑鍒埌鏂囧瓧)') + '</div>' +
-            '<div class="card-meta">' +
-              '<span class="tag tag-notebook">' + escapeHtml(nbName) + '</span>' +
-              '<span class="tag tag-subject">' + escapeHtml(item.subject||'鏈煡瀛︾') + '</span>' +
-              '<span class="tag tag-difficulty ' + diffClass + '">' + escapeHtml(item.difficulty||'鏈煡') + '</span>' +
-              kpTags +
-            '</div>' +
-            '<div class="card-analysis">' + escapeHtml(item.analysis||'鏆傛棤鍒嗘瀽') + '</div>' +
-          '</div>' +
+        '<img class="card-thumb" src="' + item.imageBase64 + '" alt="缩略图" data-full="' + item.imageBase64 + '">' +
+        '<div class="card-info">' +
+        '<div class="card-ocr">' + escapeHtml(item.ocrText||'(未识别到文字)') + '</div>' +
+        '<div class="card-meta">' +
+        '<span class="tag tag-notebook">' + escapeHtml(nbName) + '</span>' +
+        '<span class="tag tag-subject">' + escapeHtml(item.subject||'未知学科') + '</span>' +
+        '<span class="tag tag-difficulty ' + diffClass + '">' + escapeHtml(item.difficulty||'未知') + '</span>' +
+        kpTags +
+        '</div>' +
+        '<div class="card-analysis">' + escapeHtml(item.analysis||'暂无分析') + '</div>' +
+        '</div>' +
         '</div>' +
         '<div class="card-bottom">' +
-          '<span class="card-time">' + formatDate(item.createdAt) + '</span>' +
-          '<div class="card-actions"><button class="btn btn-outline btn-sm card-del">鍒犻櫎</button></div>' +
+        '<span class="card-time">' + formatDate(item.createdAt) + '</span>' +
+        '<div class="card-actions"><button class="btn btn-outline btn-sm card-del">删除</button></div>' +
         '</div>';
       cardGrid.appendChild(card);
       card.querySelector('.card-thumb').addEventListener('click', function(){ showImageModal(this.dataset.full); });
       card.querySelector('.card-del').addEventListener('click', function(){ delMistake(item.id); });
     });
   }
-
   searchInput.addEventListener('input', renderList);
-
   function delMistake(id) {
-    var d = loadData();
-    d.mistakes = d.mistakes.filter(function(m){ return m.id !== id; });
-    saveData(d);
-    renderSidebar();
-    renderList();
-    showToast('宸插垹闄?);
+    var d = loadData(); d.mistakes = d.mistakes.filter(function(m){ return m.id !== id; });
+    saveData(d); renderSidebar(); renderList(); showToast('已删除');
   }
-
   clearAllBtn.addEventListener('click', function(){
-    var d = loadData();
-    if (d.mistakes.length === 0) return;
+    var d = loadData(); if (d.mistakes.length === 0) return;
     if (d.activeNotebookId !== null) {
       var nb = d.notebooks.find(function(n){ return n.id === d.activeNotebookId; });
       var count = d.mistakes.filter(function(m){ return m.notebookId === d.activeNotebookId; }).length;
       if (count === 0) return;
-      if (!confirm('纭畾娓呯┖銆? + (nb?nb.name:'') + '銆嶄腑 ' + count + ' 鏉￠敊棰橈紵涓嶅彲鎭㈠銆?)) return;
+      if (!confirm('确定清空「' + (nb?nb.name:'') + '」中 ' + count + ' 条错题？不可恢复。')) return;
       d.mistakes = d.mistakes.filter(function(m){ return m.notebookId !== d.activeNotebookId; });
     } else {
-      if (!confirm('纭畾娓呯┖鍏ㄩ儴 ' + d.mistakes.length + ' 鏉￠敊棰橈紵涓嶅彲鎭㈠銆?)) return;
+      if (!confirm('确定清空全部 ' + d.mistakes.length + ' 条错题？不可恢复。')) return;
       d.mistakes = [];
     }
-    saveData(d);
-    renderSidebar();
-    renderList();
-    showToast('宸叉竻绌?);
+    saveData(d); renderSidebar(); renderList(); showToast('已清空');
   });
 
-  // ============ 鍥剧墖 Modal ============
+  // ============ 图片 Modal ============
   function showImageModal(src) { modalImg.src = src; imageModal.style.display = 'flex'; }
   function hideImageModal() { imageModal.style.display = 'none'; }
   modalClose.addEventListener('click', hideImageModal);
   imageModal.addEventListener('click', function(e){ if (e.target === imageModal) hideImageModal(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') hideImageModal(); });
 
-  // ============ 鍥剧墖鍘嬬缉 ============
+  // ============ 图片压缩 ============
   function compressImage(base64, maxW, quality) {
     return new Promise(function(resolve){
       var img = new Image();
@@ -1284,7 +653,6 @@ body {
       img.src = base64;
     });
   }
-
   async function ensureImageSize(b64) {
     var r = b64;
     if (b64.length > MAX_IMAGE_BASE64) r = await compressImage(b64, 1200, 0.7);
@@ -1292,55 +660,43 @@ body {
     return r;
   }
 
-  // ============ 涓婁紶澶勭悊 ============
+  // ============ 上传处理 ============
   function handleFile(file) {
-    if (isProcessing) { showToast('姝ｅ湪澶勭悊涓紝璇风◢鍊?); return; }
-    if (!file.type.match(/image\/(jpeg|png|webp)/)) { showToast('浠呮敮鎸?JPG / PNG / WebP'); return; }
-    if (file.size > 10 * 1024 * 1024) { showToast('鏂囦欢涓嶈兘瓒呰繃 10MB'); return; }
-
+    if (isProcessing) { showToast('正在处理中，请稍候'); return; }
+    if (!file.type.match(/image\/(jpeg|png|webp)/)) { showToast('仅支持 JPG / PNG / WebP'); return; }
+    if (file.size > 10 * 1024 * 1024) { showToast('文件不能超过 10MB'); return; }
     var d = loadData();
     if (d.notebooks.length === 0) {
-      d.notebooks.push({ id:generateId('nb_'), name:'榛樿閿欓鏈?, createdAt:new Date().toISOString() });
-      saveData(d);
-      renderSidebar();
+      d.notebooks.push({ id:generateId('nb_'), name:'默认错题本', createdAt:new Date().toISOString() });
+      saveData(d); renderSidebar();
     }
-var reader = new FileReader();
+    var reader = new FileReader();
     reader.onload = function(e){
       currentImageBase64 = e.target.result;
       previewImg.src = currentImageBase64;
-      previewSize.textContent = '澶у皬锛? + formatBytes(file.size);
+      previewSize.textContent = '大小：' + formatBytes(file.size);
       previewArea.classList.add('active');
       loadingArea.classList.remove('active');
       startAnalyzeBtn.disabled = false;
     };
     reader.readAsDataURL(file);
   }
-
   function resetPreview() {
-    currentImageBase64 = null;
-previewImg.src = '';
-    previewArea.classList.remove('active');
-    loadingArea.classList.remove('active');
-    fileInput.value = '';
+    currentImageBase64 = null; previewImg.src = '';
+    previewArea.classList.remove('active'); loadingArea.classList.remove('active'); fileInput.value = '';
   }
 
-  // ============ 鍒嗘瀽娴佺▼锛欵asyOCR 鈫?DeepSeek ============
+  // ============ 分析流程：EasyOCR → DeepSeek ============
   async function doAnalyze() {
     if (!currentImageBase64) return;
-
     var d = loadData();
     var targetNbId = d.activeNotebookId;
     if (targetNbId === null && d.notebooks.length > 0) targetNbId = d.notebooks[0].id;
-    if (!targetNbId) { showToast('璇峰厛鍒涘缓鎴栭€夋嫨涓€涓敊棰樻湰'); return; }
-
-    isProcessing = true;
-    startAnalyzeBtn.disabled = true;
-    loadingArea.classList.add('active');
-
+    if (!targetNbId) { showToast('请先创建或选择一个错题本'); return; }
+    isProcessing = true; startAnalyzeBtn.disabled = true; loadingArea.classList.add('active');
     try {
-      // === 闃舵1: EasyOCR ===
-      loadingText.textContent = '姝ｅ湪 OCR 璇嗗埆...';
-
+      // === 阶段1: EasyOCR ===
+      loadingText.textContent = '正在 OCR 识别...';
       var ocrResp = await fetch('/api/ocr', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1348,147 +704,97 @@ previewImg.src = '';
       });
       var ocrData = await ocrResp.json();
       var ocrText = '';
-
-      if (ocrData && ocrData.text) {
-        ocrText = ocrData.text.trim();
-      } else if (ocrData && Array.isArray(ocrData.words)) {
-        ocrText = ocrData.words.map(function(w){ return typeof w === 'string' ? w : (w.text || ''); }).join('\n');
-      } else if (ocrData && Array.isArray(ocrData)) {
-        ocrText = ocrData.map(function(w){ return typeof w === 'string' ? w : (w.text || ''); }).join('\n');
-      } else if (typeof ocrData === 'string') {
-        ocrText = ocrData.trim();
-      } else {
-        ocrText = '';
-      }
-
+      if (ocrData && ocrData.text) { ocrText = ocrData.text.trim(); }
+      else if (ocrData && Array.isArray(ocrData.words)) { ocrText = ocrData.words.map(function(w){ return typeof w === 'string' ? w : (w.text || ''); }).join('\n'); }
+      else if (ocrData && Array.isArray(ocrData)) { ocrText = ocrData.map(function(w){ return typeof w === 'string' ? w : (w.text || ''); }).join('\n'); }
+      else if (typeof ocrData === 'string') { ocrText = ocrData.trim(); }
+      else { ocrText = ''; }
       if (!ocrText) {
-        showToast('鏈瘑鍒埌鏂囧瓧锛岃纭鎴浘娓呮櫚搴?);
-        isProcessing = false;
-        startAnalyzeBtn.disabled = false;
-        loadingArea.classList.remove('active');
-        return;
+        showToast('未识别到文字，请确认截图清晰度');
+        isProcessing = false; startAnalyzeBtn.disabled = false; loadingArea.classList.remove('active'); return;
       }
 
-      // === 闃舵2: DeepSeek 鐭ヨ瘑鐐瑰垎鏋?===
+      // === 阶段2: DeepSeek 知识点分析 ===
       var settings = loadSettings();
       if (!settings.apiKey) {
-        // 鏃?API Key锛屼粎淇濆瓨 OCR 缁撴灉
-        saveMistake(targetNbId, currentImageBase64, ocrText, '鏈煡', [], '鏈煡', '锛堟湭閰嶇疆 DeepSeek API Key锛岃烦杩?AI 鍒嗘瀽锛?);
-        showToast('OCR 璇嗗埆瀹屾垚锛堟湭閰嶇疆 API Key锛岃烦杩囩煡璇嗙偣鍒嗘瀽锛?);
-        isProcessing = false;
-        resetPreview();
-        return;
+        saveMistake(targetNbId, currentImageBase64, ocrText, '未知', [], '未知', '（未配置 DeepSeek API Key，跳过 AI 分析）');
+        showToast('OCR 识别完成（未配置 API Key，跳过知识点分析）');
+        isProcessing = false; resetPreview(); return;
       }
-
-      loadingText.textContent = '姝ｅ湪 AI 鍒嗘瀽鐭ヨ瘑鐐?..';
-
-      var analysisPrompt = '璇锋牴鎹互涓婳CR璇嗗埆鐨勯鐩枃瀛楀唴瀹癸紝鍒ゆ柇棰樼洰鎵€灞炵殑瀛︾銆佹秹鍙婄殑鐭ヨ瘑鐐广€侀毦搴︼紙绠€鍗?涓瓑/鍥伴毦锛夛紝骞剁粰鍑虹畝瑕佸垎鏋愩€俓n\n棰樼洰鏂囧瓧锛歕n"""\n' + ocrText + '\n"""\n\n璇蜂弗鏍兼寜浠ヤ笅 JSON 鏍煎紡杩斿洖锛堜笉瑕佸姞 markdown 浠ｇ爜鍧楁爣璁帮紝鍙繑鍥炵函 JSON锛夛細\n{\n  "subject": "瀛︾鍚嶇О",\n  "knowledgePoints": ["鐭ヨ瘑鐐?", "鐭ヨ瘑鐐?"],\n  "difficulty": "绠€鍗?涓瓑/鍥伴毦",\n  "analysis": "绠€瑕佸垎鏋愶紙100瀛椾互鍐咃級"\n}\n\n娉ㄦ剰锛歬nowledgePoints 鑷冲皯1涓渶澶?涓紝鍙啓鏈€鏍稿績鐨勭煡璇嗙偣銆?;
-
+      loadingText.textContent = '正在 AI 分析知识点...';
+      var analysisPrompt = '请根据以下OCR识别的题目文字内容，判断题目所属的学科、涉及的知识点、难度（简单/中等/困难），并给出简要分析。\n\n题目文字：\n"""\n' + ocrText + '\n"""\n\n请严格按以下 JSON 格式返回（不要加 markdown 代码块标记，只返回纯 JSON）：\n{\n  "subject": "学科名称",\n  "knowledgePoints": ["知识点1", "知识点2"],\n  "difficulty": "简单/中等/困难",\n  "analysis": "简要分析（100字以内）"\n}\n\n注意：knowledgePoints 至少1个最多3个，只写最核心的知识点。';
       var aiResp = await fetch(DEEPSEEK_API, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + settings.apiKey
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [{ role: 'user', content: analysisPrompt }],
-          temperature: 0.3,
-          max_tokens: 800
-        })
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + settings.apiKey },
+        body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'user', content: analysisPrompt }], temperature: 0.3, max_tokens: 800 })
       });
-
       if (!aiResp.ok) {
         var errText = await aiResp.text();
-        var errMsg = 'API 澶辫触 (' + aiResp.status + ')';
-        if (aiResp.status === 401) errMsg = 'API Key 鏃犳晥锛岃妫€鏌ヨ缃?;
-        else if (aiResp.status === 402) errMsg = 'API 浣欓涓嶈冻';
-        else if (aiResp.status === 429) errMsg = '璇锋眰杩囦簬棰戠箒锛岃绋嶅悗閲嶈瘯';
-        throw new Error(errMsg + (errText ? '锛? + errText.slice(0,200) : ''));
+        var errMsg = 'API 失败 (' + aiResp.status + ')';
+        if (aiResp.status === 401) errMsg = 'API Key 无效，请检查设置';
+        else if (aiResp.status === 402) errMsg = 'API 余额不足';
+        else if (aiResp.status === 429) errMsg = '请求过于频繁，请稍后重试';
+        throw new Error(errMsg + (errText ? '：' + errText.slice(0,200) : ''));
       }
-
       var aiData = await aiResp.json();
       var content = (aiData.choices && aiData.choices[0] && aiData.choices[0].message && aiData.choices[0].message.content) || '';
-
-      // 瑙ｆ瀽 JSON
       var parsed = null;
       try { parsed = JSON.parse(content); } catch(e) {}
       if (!parsed) {
         var m = content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/) || content.match(/\{[\s\S]*\}/);
         if (m) { try { parsed = JSON.parse(m[0] || m[1]); } catch(e2) {} }
       }
-
-      var subject = (parsed && parsed.subject) ? parsed.subject : '鏈煡';
+      var subject = (parsed && parsed.subject) ? parsed.subject : '未知';
       var kps = (parsed && Array.isArray(parsed.knowledgePoints)) ? parsed.knowledgePoints : [];
-      var difficulty = (parsed && parsed.difficulty) ? parsed.difficulty : '鏈煡';
+      var difficulty = (parsed && parsed.difficulty) ? parsed.difficulty : '未知';
       var analysis = (parsed && parsed.analysis) ? parsed.analysis : content.slice(0, 200);
 
-      // 鍘嬬缉鍥剧墖
-      loadingText.textContent = '姝ｅ湪鍘嬬缉鍥剧墖...';
+      // 压缩图片
+      loadingText.textContent = '正在压缩图片...';
       var compressedImg = await ensureImageSize(currentImageBase64);
 
-      // 淇濆瓨
-      loadingText.textContent = '姝ｅ湪淇濆瓨...';
+      // 保存
+      loadingText.textContent = '正在保存...';
       saveMistake(targetNbId, compressedImg, ocrText, subject, kps, difficulty, analysis);
-      showToast('鍒嗘瀽瀹屾垚锛侀敊棰樺凡淇濆瓨');
+      showToast('分析完成！错题已保存');
       resetPreview();
-
     } catch(err) {
       console.error(err);
-      showToast('鍒嗘瀽澶辫触锛? + (err.message || '缃戠粶閿欒'));
+      showToast('分析失败：' + (err.message || '网络错误'));
     } finally {
-      isProcessing = false;
-      startAnalyzeBtn.disabled = false;
-      loadingArea.classList.remove('active');
+      isProcessing = false; startAnalyzeBtn.disabled = false; loadingArea.classList.remove('active');
     }
   }
-
   function saveMistake(nbId, imgB64, ocrText, subject, kps, difficulty, analysis) {
     var mistake = {
-      id: generateId('mb_'),
-      notebookId: nbId,
-      imageBase64: imgB64,
-      ocrText: ocrText,
-      subject: subject,
-      knowledgePoints: kps,
-      difficulty: difficulty,
-      analysis: analysis,
+      id: generateId('mb_'), notebookId: nbId, imageBase64: imgB64, ocrText: ocrText,
+      subject: subject, knowledgePoints: kps, difficulty: difficulty, analysis: analysis,
       createdAt: new Date().toISOString()
     };
-    var d = loadData();
-    d.mistakes.unshift(mistake);
-    saveData(d);
-    renderSidebar();
-    renderList();
+    var d = loadData(); d.mistakes.unshift(mistake); saveData(d); renderSidebar(); renderList();
   }
 
-  // ============ 涓婁紶浜嬩欢 ============
+  // ============ 上传事件 ============
   uploadZone.addEventListener('click', function(e){ if (e.target === fileInput) return; fileInput.click(); });
   fileInput.addEventListener('change', function(){ if (fileInput.files.length > 0) handleFile(fileInput.files[0]); });
-
   uploadZone.addEventListener('dragover', function(e){ e.preventDefault(); uploadZone.classList.add('drag-over'); });
   uploadZone.addEventListener('dragleave', function(e){ e.preventDefault(); uploadZone.classList.remove('drag-over'); });
   uploadZone.addEventListener('drop', function(e){
     e.preventDefault(); uploadZone.classList.remove('drag-over');
     if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
   });
-
   startAnalyzeBtn.addEventListener('click', doAnalyze);
   cancelPreviewBtn.addEventListener('click', resetPreview);
 
-  // ============ 鍒濆鍖?============
+  // ============ 初始化 ============
   var initData = loadData();
   if (initData.notebooks.length === 0) {
-    initData.notebooks.push({ id: generateId('nb_'), name: '榛樿閿欓鏈?, createdAt: new Date().toISOString() });
+    initData.notebooks.push({ id: generateId('nb_'), name: '默认错题本', createdAt: new Date().toISOString() });
     saveData(initData);
   }
-  updateSettingsUI();
-  renderSidebar();
-  renderList();
-
+  updateSettingsUI(); renderSidebar(); renderList();
   if (!loadSettings().apiKey) settingsPanel.classList.add('open');
-
-  console.log('鏅撳饯鐨勯敊棰樻湰宸插氨缁紙EasyOCR + DeepSeek锛?);
+  console.log('晓彤的错题本已就绪（EasyOCR + DeepSeek）');
 })();
 </script>
 </body>
