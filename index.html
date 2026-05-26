@@ -697,11 +697,20 @@ body {
     try {
       // === 阶段1: EasyOCR ===
       loadingText.textContent = '正在 OCR 识别...';
+      // 先压缩图片再上传，避免超出Vercel请求限制
+      loadingText.textContent = '正在压缩图片...';
+      var compressedForOCR = await ensureImageSize(currentImageBase64);
+      
+      loadingText.textContent = '正在 OCR 识别...';
       var ocrResp = await fetch('/api/ocr', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: currentImageBase64 })
+        body: JSON.stringify({ image: compressedForOCR })
       });
+      if (!ocrResp.ok) {
+        var errBody = await ocrResp.text();
+        throw new Error('OCR服务返回错误 (' + ocrResp.status + '): ' + errBody.slice(0, 200));
+      }
       var ocrData = await ocrResp.json();
       var ocrText = '';
       if (ocrData && ocrData.text) { ocrText = ocrData.text.trim(); }
