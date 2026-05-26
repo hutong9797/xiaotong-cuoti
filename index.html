@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>晓彤的错题本</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg: #f0f4f8;
@@ -17,6 +18,10 @@
   --border: #e5e7eb;
   --danger: #ef4444;
   --danger-light: #fef2f2;
+  --success: #10b981;
+  --success-light: #ecfdf5;
+  --warning: #f59e0b;
+  --warning-light: #fffbeb;
   --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
   --shadow: 0 4px 16px rgba(0,0,0,.08);
   --shadow-lg: 0 8px 32px rgba(0,0,0,.12);
@@ -33,52 +38,103 @@ body {
   line-height: 1.6;
   min-height: 100vh;
 }
+
+/* ===== Auth Section ===== */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+.auth-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-lg);
+}
+.auth-card .brand { text-align: center; margin-bottom: 28px; }
+.auth-card .brand-icon {
+  width: 56px; height: 56px;
+  background: var(--primary);
+  border-radius: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 28px; color: #fff; margin-bottom: 12px;
+}
+.auth-card .brand h2 { font-size: 22px; font-weight: 700; }
+.auth-card .brand p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+.auth-tabs {
+  display: flex; gap: 0; margin-bottom: 24px;
+  border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.auth-tab {
+  flex: 1; padding: 10px; text-align: center; cursor: pointer;
+  font-size: 14px; font-weight: 600; border: none; background: none;
+  color: var(--text-secondary); transition: var(--transition); font-family: inherit;
+}
+.auth-tab.active { background: var(--primary); color: #fff; }
+.auth-form { display: flex; flex-direction: column; gap: 14px; }
+.auth-form input {
+  padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 14px; outline: none; font-family: inherit; transition: var(--transition);
+}
+.auth-form input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,110,247,.12); }
+.auth-btn {
+  padding: 12px; border: none; border-radius: 8px;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  background: var(--primary); color: #fff; transition: var(--transition);
+  font-family: inherit;
+}
+.auth-btn:hover { background: var(--primary-hover); }
+.auth-btn:disabled { opacity: .5; cursor: not-allowed; }
+.auth-error {
+  font-size: 13px; color: var(--danger); background: var(--danger-light);
+  padding: 8px 12px; border-radius: 6px; display: none;
+}
+.auth-error.show { display: block; }
+.auth-hint { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 8px; }
+.auth-logout { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 6px 10px;
+  border-radius: 6px; font-size: 12px; color: var(--text-secondary); background: none;
+  border: none; font-family: inherit; transition: var(--transition); }
+.auth-logout:hover { background: #f3f4f6; color: var(--danger); }
+
 /* ===== Layout ===== */
 .app-layout { display: flex; min-height: 100vh; }
+
 /* ===== Sidebar ===== */
 .sidebar {
   width: var(--sidebar-w);
   background: var(--card-bg);
   border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  z-index: 100;
-  overflow-y: auto;
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 100; overflow-y: auto;
   transition: transform .25s ease;
 }
 .sidebar-brand {
-  padding: 24px 20px 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  padding: 24px 20px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
 }
 .sidebar-brand .brand-icon {
-  width: 36px; height: 36px;
-  background: var(--primary);
-  border-radius: 10px;
+  width: 36px; height: 36px; background: var(--primary); border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   font-size: 20px; color: #fff; flex-shrink: 0;
 }
 .sidebar-brand .brand-name { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -.3px; }
-.sidebar-brand .brand-sub { font-size: 11px; color: var(--text-muted); margin-top: -2px; }
 .sidebar-section-title {
-  padding: 18px 20px 8px;
-  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  padding: 18px 20px 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
   color: var(--text-muted); font-weight: 600;
 }
 .sidebar-notebooks {
-  flex: 1; padding: 0 12px;
-  display: flex; flex-direction: column; gap: 2px;
-  overflow-y: auto;
+  flex: 1; padding: 0 12px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
 }
 .nb-item {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: 8px;
-  cursor: pointer; font-size: 14px; font-weight: 500;
-  color: var(--text-secondary);
+  padding: 10px 12px; border-radius: 8px; cursor: pointer;
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
   transition: var(--transition); position: relative; user-select: none;
 }
 .nb-item:hover { background: #f3f4f6; color: var(--text); }
@@ -98,13 +154,6 @@ body {
 .nb-item:hover .nb-delete { display: block; }
 .nb-item .nb-delete:hover { color: var(--danger); background: #fde8e8; }
 .nb-item.active .nb-delete { color: var(--danger); }
-.new-nb-row { padding: 8px 12px; display: flex; flex-direction: column; gap: 8px; }
-.new-nb-row input {
-  padding: 8px 12px; border: 1.5px solid var(--primary); border-radius: 8px;
-  font-size: 13px; outline: none; font-family: inherit; width: 100%;
-}
-.new-nb-row input:focus { box-shadow: 0 0 0 3px rgba(79,110,247,.12); }
-.new-nb-row .row-btns { display: flex; gap: 6px; }
 .sidebar-add-btn {
   margin: 6px 12px 12px; padding: 9px 12px; border-radius: 8px;
   font-size: 13px; font-weight: 500; cursor: pointer;
@@ -114,13 +163,7 @@ body {
 }
 .sidebar-add-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
 .sidebar-footer { padding: 12px 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); }
-.sidebar-footer .settings-btn {
-  display: flex; align-items: center; gap: 6px; cursor: pointer;
-  padding: 6px 10px; border-radius: 6px; font-size: 12px;
-  color: var(--text-secondary); background: none; border: none;
-  font-family: inherit; transition: var(--transition); width: 100%; text-align: left;
-}
-.sidebar-footer .settings-btn:hover { background: #f3f4f6; color: var(--primary); }
+
 /* ===== Main Content ===== */
 .main-content { flex: 1; margin-left: var(--sidebar-w); padding: 24px 32px 40px; min-width: 0; }
 .main-header { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
@@ -131,6 +174,24 @@ body {
   border: none; background: none; cursor: pointer; font-size: 24px; color: var(--text); border-radius: 8px;
 }
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99; }
+
+/* ===== Tabs ===== */
+.view-tabs {
+  display: flex; gap: 4px; margin-bottom: 20px;
+  background: var(--card-bg); border-radius: 10px; padding: 4px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+}
+.view-tab {
+  flex: 1; padding: 10px 16px; text-align: center; cursor: pointer;
+  font-size: 14px; font-weight: 600; border: none; background: none;
+  color: var(--text-secondary); border-radius: 8px; transition: var(--transition);
+  font-family: inherit;
+}
+.view-tab:hover { color: var(--text); background: #f3f4f6; }
+.view-tab.active { background: var(--primary); color: #fff; }
+.view-panel { display: none; }
+.view-panel.active { display: block; }
+
 /* ===== Settings Panel ===== */
 .settings-panel {
   background: var(--card-bg); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px;
@@ -148,6 +209,7 @@ body {
 .settings-panel .status { font-size: 13px; margin-top: 8px; padding: 6px 10px; border-radius: 6px; display: inline-block; }
 .settings-panel .status.saved { background: #ecfdf5; color: #065f46; }
 .settings-panel .status.empty { background: #fefce8; color: #92400e; }
+
 /* ===== Buttons ===== */
 .btn {
   display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px;
@@ -162,6 +224,7 @@ body {
 .btn-danger { background: var(--danger-light); color: var(--danger); }
 .btn-danger:hover { background: #fde8e8; }
 .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; }
+
 /* ===== Upload Zone ===== */
 .upload-zone {
   background: var(--card-bg); border: 2px dashed var(--border); border-radius: var(--radius);
@@ -171,488 +234,826 @@ body {
 .upload-zone .upload-icon { font-size: 40px; margin-bottom: 8px; color: var(--text-muted); }
 .upload-zone.drag-over .upload-icon { color: var(--primary); }
 .upload-zone .upload-text { font-size: 15px; font-weight: 500; color: var(--text-secondary); }
-.upload-zone .upload-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-.upload-zone input[type=file] { display: none; }
-/* ===== Preview Area ===== */
-.preview-area {
-  background: var(--card-bg); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px;
-  box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: none; animation: slideDown .25s ease;
-}
+.upload-zone .upload-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+/* ===== Preview & Loading ===== */
+.preview-area { background: var(--card-bg); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: none; }
 .preview-area.active { display: block; }
-.preview-area .preview-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.preview-area .preview-title { font-weight: 600; font-size: 15px; }
-.preview-area .preview-img {
-  max-width: 100%; max-height: 320px; border-radius: var(--radius-sm);
-  border: 1px solid var(--border); display: block; margin: 0 auto; object-fit: contain;
+.preview-area img { max-width: 100%; max-height: 300px; border-radius: 8px; display: block; margin: 0 auto 12px; }
+.preview-area .preview-actions { display: flex; gap: 10px; justify-content: center; }
+.loading-area { background: var(--card-bg); border-radius: var(--radius); padding: 32px; margin-bottom: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: none; text-align: center; }
+.loading-area.active { display: block; }
+.loading-area .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-area .loading-text { font-size: 14px; color: var(--text-secondary); }
+
+/* ===== Stats Dashboard ===== */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--card-bg); border-radius: var(--radius); padding: 20px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border); text-align: center;
 }
-.preview-area .preview-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
-.preview-area .preview-size { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
-.preview-area .loading-indicator {
-  display: none; align-items: center; gap: 10px; padding: 12px 18px;
-  background: var(--primary-light); border-radius: var(--radius-sm); margin-top: 14px;
+.stat-card .stat-value { font-size: 32px; font-weight: 700; color: var(--primary); }
+.stat-card .stat-label { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+.stat-card.accent { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; }
+.stat-card.accent .stat-value { color: #fff; }
+.stat-card.accent .stat-label { color: rgba(255,255,255,.7); }
+.stats-charts { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.chart-card {
+  background: var(--card-bg); border-radius: var(--radius); padding: 20px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border);
 }
-.preview-area .loading-indicator.active { display: flex; }
-.loading-text { font-size: 14px; color: var(--primary); font-weight: 500; }
-/* ===== Search ===== */
-.search-bar { position: relative; margin-bottom: 14px; }
-.search-bar input {
-  width: 100%; padding: 10px 14px 10px 38px; border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm); font-size: 14px; outline: none; font-family: inherit;
-  background: var(--card-bg); transition: var(--transition);
-}
-.search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,110,247,.08); }
-.search-bar input::placeholder { color: var(--text-muted); }
-.search-bar .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text-muted); pointer-events: none; }
-/* ===== List Header ===== */
-.list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.list-header h2 { font-size: 18px; font-weight: 700; }
-.list-header .count { font-size: 13px; color: var(--text-secondary); font-weight: 400; margin-left: 6px; }
-/* ===== Empty State ===== */
-.empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); }
-.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
-.empty-state p { font-size: 14px; }
+.chart-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.bar-chart { display: flex; flex-direction: column; gap: 10px; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { font-size: 13px; color: var(--text-secondary); min-width: 80px; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track { flex: 1; height: 24px; background: #f3f4f6; border-radius: 6px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; border-radius: 6px; transition: width .6s ease; min-width: 2px; display: flex; align-items: center; padding-left: 8px; }
+.bar-fill .bar-count { font-size: 11px; color: #fff; font-weight: 600; }
+.bar-fill.blue { background: linear-gradient(90deg, #4f6ef7, #667eea); }
+.bar-fill.purple { background: linear-gradient(90deg, #764ba2, #9b59b6); }
+.bar-fill.green { background: linear-gradient(90deg, #10b981, #34d399); }
+.bar-fill.orange { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.bar-fill.red { background: linear-gradient(90deg, #ef4444, #f87171); }
+.recent-list { display: flex; flex-direction: column; gap: 8px; }
+.recent-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: #f9fafb; }
+.recent-item .ri-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.recent-item .ri-text { flex: 1; font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recent-item .ri-time { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
+
 /* ===== Card Grid ===== */
-.card-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.card-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.card-toolbar input {
+  flex: 1; min-width: 180px; padding: 9px 14px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-size: 14px; outline: none; font-family: inherit;
+}
+.card-toolbar input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,110,247,.12); }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
 .mistake-card {
-  background: var(--card-bg); border-radius: var(--radius); padding: 18px 20px;
-  box-shadow: var(--shadow-sm); border: 1px solid var(--border); animation: fadeIn .3s ease; transition: var(--transition);
+  background: var(--card-bg); border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: var(--transition);
 }
-.mistake-card:hover { box-shadow: var(--shadow); }
-.mistake-card .card-top { display: flex; gap: 14px; align-items: flex-start; }
-.mistake-card .card-thumb {
-  width: 100px; height: 80px; object-fit: cover; border-radius: var(--radius-sm);
-  border: 1px solid var(--border); cursor: pointer; flex-shrink: 0; transition: var(--transition);
+.mistake-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.card-top { display: flex; gap: 14px; padding: 16px; }
+.card-thumb {
+  width: 80px; height: 80px; object-fit: cover; border-radius: 8px;
+  cursor: pointer; flex-shrink: 0; background: #f3f4f6;
 }
-.mistake-card .card-thumb:hover { opacity: .85; }
-.mistake-card .card-info { flex: 1; min-width: 0; }
-.mistake-card .card-ocr {
-  font-size: 14px; color: var(--text); line-height: 1.5;
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px;
-}
-.mistake-card .card-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.mistake-card .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; white-space: nowrap; }
-.tag-subject { background: #eef1fe; color: #4f6ef7; }
-.tag-difficulty { background: #fef3c7; color: #92400e; }
-.tag-difficulty.easy { background: #ecfdf5; color: #065f46; }
-.tag-difficulty.hard { background: #fef2f2; color: #991b1b; }
-.tag-kp { background: #f3f4f6; color: #374151; }
+.card-info { flex: 1; min-width: 0; }
+.card-ocr { font-size: 13px; color: var(--text); line-height: 1.5; max-height: 60px; overflow: hidden; margin-bottom: 8px; word-break: break-all; }
+.card-meta { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.card-analysis { font-size: 12px; color: var(--text-secondary); line-height: 1.5; max-height: 48px; overflow: hidden; }
+.card-bottom { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-top: 1px solid var(--border); background: #fafbfc; }
+.card-time { font-size: 12px; color: var(--text-muted); }
+.card-actions { display: flex; gap: 6px; }
+
+/* ===== Tags ===== */
+.tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; white-space: nowrap; }
 .tag-notebook { background: #ede9fe; color: #7c3aed; }
-.mistake-card .card-analysis {
-  font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-.mistake-card .card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
-.mistake-card .card-time { font-size: 12px; color: var(--text-muted); }
-.mistake-card .card-actions { display: flex; gap: 8px; }
-/* ===== Image Modal ===== */
+.tag-subject { background: #dbeafe; color: #2563eb; }
+.tag-difficulty { background: #f3f4f6; color: var(--text-secondary); }
+.tag-difficulty.easy { background: #dcfce7; color: #16a34a; }
+.tag-difficulty.hard { background: #fee2e2; color: #dc2626; }
+.tag-kp { background: #fef3c7; color: #d97706; }
+
+/* ===== Detail Modal ===== */
 .modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex;
-  align-items: center; justify-content: center; z-index: 2000; animation: fadeIn .2s ease; padding: 20px;
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  z-index: 200; align-items: center; justify-content: center; padding: 20px;
 }
-.modal-overlay .modal-img { max-width: 92vw; max-height: 85vh; border-radius: var(--radius); box-shadow: var(--shadow-lg); cursor: pointer; }
-.modal-overlay .modal-close {
-  position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,.9); border: none;
-  width: 36px; height: 36px; border-radius: 50%; font-size: 20px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; color: var(--text); transition: var(--transition);
+.modal-overlay.open { display: flex; }
+.modal-content {
+  background: var(--card-bg); border-radius: 16px; width: 100%; max-width: 600px;
+  max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow-lg); padding: 24px;
 }
-.modal-overlay .modal-close:hover { background: #fff; }
+.modal-content h3 { font-size: 18px; margin-bottom: 16px; }
+.modal-content .detail-img { width: 100%; border-radius: 8px; margin-bottom: 16px; }
+.detail-section { margin-bottom: 16px; }
+.detail-section h4 { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+.detail-section p { font-size: 14px; line-height: 1.7; color: var(--text); }
+.detail-section .tag-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.modal-close { float: right; font-size: 24px; cursor: pointer; color: var(--text-muted); border: none; background: none; padding: 4px; }
+.modal-close:hover { color: var(--text); }
+
+/* ===== Image Modal ===== */
+.image-modal {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85);
+  z-index: 300; align-items: center; justify-content: center; cursor: pointer;
+}
+.image-modal.open { display: flex; }
+.image-modal img { max-width: 90%; max-height: 90%; border-radius: 8px; }
+
+/* ===== Empty State ===== */
+.empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: .5; }
+.empty-state .empty-text { font-size: 15px; }
+
 /* ===== Toast ===== */
 .toast {
-  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-  background: var(--text); color: #fff; padding: 10px 22px; border-radius: 20px;
-  font-size: 14px; z-index: 3000; animation: fadeIn .2s ease; pointer-events: none;
+  position: fixed; top: 24px; right: 24px; z-index: 400;
+  padding: 12px 20px; border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  background: var(--text); color: #fff;
+  box-shadow: var(--shadow-lg);
+  transform: translateX(120%); transition: transform .3s ease;
 }
-/* ===== Footer ===== */
-.footer-note { text-align: center; padding: 24px 0 8px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 32px; }
+.toast.show { transform: translateX(0); }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+
 /* ===== Animations ===== */
-@keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-@keyframes spin { to { transform: rotate(360deg); } }
-.spinner { width: 18px; height: 18px; border: 2px solid #e5e7eb; border-top-color: var(--primary); border-radius: 50%; animation: spin .6s linear infinite; display: inline-block; flex-shrink: 0; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); box-shadow: var(--shadow-lg); }
+  .sidebar { transform: translateX(-100%); }
   .sidebar.open { transform: translateX(0); }
-  .sidebar-overlay.open { display: block; }
-  .main-content { margin-left: 0; padding: 16px 12px 30px; }
+  .sidebar-overlay.show { display: block; }
+  .main-content { margin-left: 0; padding: 16px; }
   .hamburger { display: flex; }
-  .main-header h1 { font-size: 22px; }
-  .upload-zone { padding: 24px 16px; }
-  .mistake-card .card-top { flex-direction: column; }
-  .mistake-card .card-thumb { width: 100%; height: 160px; }
-  .preview-area .preview-actions { flex-direction: column; }
-  .preview-area .preview-actions .btn { width: 100%; justify-content: center; }
-  .settings-panel .input-row { flex-direction: column; }
+  .card-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-charts { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
+
+<!-- ===== Auth Section ===== -->
+<div id="auth-section" class="auth-container">
+  <div class="auth-card">
+    <div class="brand">
+      <div class="brand-icon">📒</div>
+      <h2>晓彤的错题本</h2>
+      <p>登录后数据云端同步，多设备通用</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">登录</button>
+      <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">注册</button>
+    </div>
+    <div class="auth-form" id="auth-form">
+      <input type="email" id="auth-email" placeholder="邮箱地址" autocomplete="email">
+      <input type="password" id="auth-password" placeholder="密码（至少6位）" autocomplete="current-password">
+      <div class="auth-error" id="auth-error"></div>
+      <button class="auth-btn" id="auth-submit" onclick="handleAuth()">登录</button>
+    </div>
+    <div class="auth-hint">首次使用？先注册再登录即可</div>
+  </div>
+</div>
+
+<!-- ===== Main App ===== -->
+<div id="app-section" style="display:none">
 <div class="app-layout">
-<!-- ====== 侧边栏 ====== -->
+
+<!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-  <div class="brand-icon">&#128221;</div>
-  <div>
-  <div class="brand-name">晓彤的错题本</div>
-  <div class="brand-sub">知识积累 · 高效学习</div>
-  </div>
+    <div class="brand-icon">📒</div>
+    <div>
+      <div class="brand-name">错题本</div>
+    </div>
   </div>
   <div class="sidebar-section-title">错题本</div>
-  <div class="sidebar-notebooks" id="sidebarNotebooks"></div>
-  <div id="newNbRow"></div>
-  <button class="sidebar-add-btn" id="sidebarAddBtn">+ 新建错题本</button>
+  <div class="sidebar-notebooks" id="notebook-list"></div>
+  <button class="sidebar-add-btn" id="add-nb-btn">+ 新建错题本</button>
   <div class="sidebar-footer">
-  <button class="settings-btn" id="settingsBtn">
-  &#9881; DeepSeek API 设置
-  </button>
+    <button class="auth-logout" id="settings-btn" onclick="toggleSettings()">⚙️ API 设置</button>
+    <button class="auth-logout" id="logout-btn" onclick="handleLogout()">🚪 退出登录</button>
   </div>
 </aside>
-<!-- 移动端遮罩 -->
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<!-- ====== 主内容区 ====== -->
-<main class="main-content">
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- Main -->
+<main class="main-content" id="main-content">
   <div class="main-header">
-  <div>
-  <button class="hamburger" id="hamburgerBtn" title="打开侧边栏">&#9776;</button>
-  <h1 style="display:inline-block;vertical-align:middle;margin-left:4px;">&#128221; 晓彤的错题本</h1>
-  <span class="subtitle">EasyOCR 识别 + DeepSeek AI 知识点分析</span>
+    <div>
+      <button class="hamburger" id="hamburger" onclick="openSidebar()">☰</button>
+      <h1 id="page-title">全部错题</h1>
+      <span class="subtitle" id="page-subtitle"></span>
+    </div>
   </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settings-panel">
+    <label>DeepSeek API Key</label>
+    <div class="input-row">
+      <input type="password" id="api-key-input" placeholder="sk-...">
+      <button class="btn btn-primary btn-sm" onclick="saveApiKey()">保存</button>
+    </div>
+    <div class="hint">用于 AI 知识点分析，去 <a href="https://platform.deepseek.com/api_keys" target="_blank">DeepSeek 开放平台</a> 获取</div>
+    <div class="status" id="api-key-status"></div>
   </div>
-  <!-- 设置面板 -->
-  <div class="settings-panel" id="settingsPanel">
-  <label for="apiKeyInput">DeepSeek API Key</label>
-  <div class="input-row">
-  <input type="password" id="apiKeyInput" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
-  <button class="btn btn-primary" id="saveApiKeyBtn">保存</button>
+
+  <!-- View Tabs -->
+  <div class="view-tabs">
+    <button class="view-tab active" data-view="upload" onclick="switchView('upload')">📸 上传识别</button>
+    <button class="view-tab" data-view="list" onclick="switchView('list')">📋 错题列表</button>
+    <button class="view-tab" data-view="stats" onclick="switchView('stats')">📊 学习统计</button>
   </div>
-  <div class="hint">
-  密钥仅保存在浏览器本地（localStorage），不会上传到任何第三方服务器。<br>
-  获取 API Key：<a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">platform.deepseek.com/api_keys</a> &nbsp;|&nbsp; OCR 使用免费的 EasyOCR API，无需额外配置。
+
+  <!-- Upload View -->
+  <div class="view-panel active" id="view-upload">
+    <div class="upload-zone" id="upload-zone">
+      <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" style="display:none">
+      <div class="upload-icon">📷</div>
+      <div class="upload-text">点击或拖拽上传错题截图</div>
+      <div class="upload-hint">支持 JPG / PNG / WebP，最大 10MB</div>
+    </div>
+    <div class="preview-area" id="preview-area">
+      <img id="preview-img" src="" alt="预览">
+      <div id="preview-size" style="text-align:center;font-size:13px;color:var(--text-muted);margin-bottom:12px"></div>
+      <div class="preview-actions">
+        <button class="btn btn-primary" id="analyze-btn" onclick="doAnalyze()">🔍 开始分析</button>
+        <button class="btn btn-outline" onclick="resetPreview()">取消</button>
+      </div>
+    </div>
+    <div class="loading-area" id="loading-area">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loading-text">正在分析...</div>
+    </div>
   </div>
-  <div id="apiKeyStatus"></div>
+
+  <!-- List View -->
+  <div class="view-panel" id="view-list">
+    <div class="card-toolbar">
+      <input type="text" id="search-input" placeholder="搜索错题...">
+      <button class="btn btn-danger btn-sm" id="clear-all-btn" style="display:none" onclick="clearAll()">清空</button>
+    </div>
+    <div class="card-grid" id="card-grid"></div>
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">📭</div>
+      <div class="empty-text" id="empty-text">还没有错题，上传第一张截图开始吧</div>
+    </div>
   </div>
-  <!-- 上传区 -->
-  <div class="upload-zone" id="uploadZone">
-  <div class="upload-icon">&#128206;</div>
-  <div class="upload-text">拖拽截图到此处，或点击上传</div>
-  <div class="upload-hint">支持 JPG / PNG / WebP，单张不超过 10MB</div>
-  <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
+
+  <!-- Stats View -->
+  <div class="view-panel" id="view-stats">
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="stats-charts" id="stats-charts"></div>
   </div>
-  <!-- 预览 -->
-  <div class="preview-area" id="previewArea">
-  <div class="preview-header">
-  <span class="preview-title">截图预览</span>
-  <button class="btn btn-outline btn-sm" id="cancelPreviewBtn">取消</button>
-  </div>
-  <img class="preview-img" id="previewImg" alt="预览">
-  <div class="preview-size" id="previewSize"></div>
-  <div class="preview-actions">
-  <button class="btn btn-primary" id="startAnalyzeBtn">开始分析</button>
-  </div>
-  <div class="loading-indicator" id="loadingArea">
-  <span class="spinner"></span>
-  <span class="loading-text" id="loadingText">正在处理...</span>
-  </div>
-  </div>
-  <!-- 搜索 -->
-  <div class="search-bar" id="searchBar" style="display:none;">
-  <span class="search-icon">&#128269;</span>
-  <input type="text" id="searchInput" placeholder="搜索题目文字、知识点、学科、错题本...">
-  </div>
-  <!-- 列表头部 -->
-  <div class="list-header">
-  <h2>错题列表<span class="count" id="listCount">（0 条）</span></h2>
-  <button class="btn btn-danger btn-sm" id="clearAllBtn" style="display:none;">清空全部</button>
-  </div>
-  <!-- 卡片网格 -->
-  <div class="card-grid" id="cardGrid"></div>
-  <div class="empty-state" id="emptyState">
-  <div class="empty-icon">&#128221;</div>
-  <p id="emptyText">还没有错题，上传第一张截图开始吧</p>
-  </div>
-  <!-- 页脚 -->
-  <div class="footer-note">
-  部署到 Vercel 即可全网访问 &nbsp;|&nbsp; OCR 通过 Serverless Function 代理，AI 分析由 DeepSeek 提供
-  </div>
+
 </main>
-</div><!-- .app-layout -->
-<!-- 大图模态框 -->
-<div class="modal-overlay" id="imageModal" style="display:none;">
-  <button class="modal-close" id="modalClose">&times;</button>
-  <img class="modal-img" id="modalImg" alt="查看大图">
 </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal-content" id="detail-content"></div>
+</div>
+
+<!-- Image Modal -->
+<div class="image-modal" id="image-modal">
+  <img id="modal-img" src="" alt="大图">
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
 <script>
 (function() {
   'use strict';
-  // ============ 常量 ============
-  var STORAGE_KEY = 'mistake_book_data_v2';
-  var SETTINGS_KEY = 'mistake_book_settings_v2';
-  var MAX_IMAGE_BASE64 = 500000;
+
+  // ===== Supabase Config =====
+  // TODO: 替换为你自己的 Supabase 项目信息
+  var SUPABASE_URL = 'https://cgcjqfuxmqjmyhsnxlvk.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnY2pxZnV4bXFqbXloc254bHZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODE2MDksImV4cCI6MjA5NTM1NzYwOX0.OElPSYCyErST7f9z8yCN3nUbqtvJ1OgsVZUE6E8q1cU';
+  var supabaseClient = null;
+  var currentUser = null;
   var DEEPSEEK_API = 'https://api.deepseek.com/chat/completions';
-  // ============ 帮助函数 ============
-  var $ = function(s, ctx) { return (ctx || document).querySelector(s); };
-  var $$ = function(s, ctx) { return (ctx || document).querySelectorAll(s); };
-  function formatDate(iso) {
-    var d = new Date(iso), p = function(n) { return String(n).padStart(2,'0'); };
-    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
-  }
-  function formatBytes(b) {
-    if (b < 1024) return b+' B';
-    if (b < 1048576) return (b/1024).toFixed(1)+' KB';
-    return (b/1048576).toFixed(1)+' MB';
-  }
-  function escapeHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-  function showToast(msg) {
-    var el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
-    document.body.appendChild(el); setTimeout(function(){ el.remove(); }, 2500);
-  }
-  function generateId(pre) { return (pre||'mb_') + Date.now() + '_' + Math.random().toString(36).slice(2,8); }
-
-  // ============ 数据 ============
-  function loadData() {
-    try {
-      var r = localStorage.getItem(STORAGE_KEY);
-      if (!r) return { notebooks:[], mistakes:[], activeNotebookId:null };
-      var d = JSON.parse(r);
-      if (Array.isArray(d)) {
-        var nb = { id:generateId('nb_'), name:'默认错题本', createdAt:new Date().toISOString() };
-        d.forEach(function(m){ m.notebookId = nb.id; });
-        return { notebooks:[nb], mistakes:d, activeNotebookId:null };
-      }
-      d.notebooks = d.notebooks || [];
-      d.mistakes = d.mistakes || [];
-      if (d.activeNotebookId === undefined) d.activeNotebookId = null;
-      return d;
-    } catch(e) { return { notebooks:[], mistakes:[], activeNotebookId:null }; }
-  }
-  function saveData(d) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
-    catch(e) { if (e.name==='QuotaExceededError') showToast('存储空间不足，请删除部分错题'); }
-  }
-  function loadSettings() {
-    try { var r = localStorage.getItem(SETTINGS_KEY); return r ? JSON.parse(r) : { apiKey:'' }; }
-    catch(e) { return { apiKey:'' }; }
-  }
-  function saveSettings(s) { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch(e) {} }
-
-  // ============ 缓存 DOM ============
-  var sidebar = $('#sidebar');
-  var sidebarOverlay = $('#sidebarOverlay');
-  var hamburgerBtn = $('#hamburgerBtn');
-  var sidebarNotebooks = $('#sidebarNotebooks');
-  var sidebarAddBtn = $('#sidebarAddBtn');
-  var settingsPanel = $('#settingsPanel');
-  var apiKeyInput = $('#apiKeyInput');
-  var saveApiKeyBtn = $('#saveApiKeyBtn');
-  var apiKeyStatus = $('#apiKeyStatus');
-  var settingsBtn = $('#settingsBtn');
-  var uploadZone = $('#uploadZone');
-  var fileInput = $('#fileInput');
-  var previewArea = $('#previewArea');
-  var previewImg = $('#previewImg');
-  var previewSize = $('#previewSize');
-  var startAnalyzeBtn = $('#startAnalyzeBtn');
-  var cancelPreviewBtn = $('#cancelPreviewBtn');
-  var loadingArea = $('#loadingArea');
-  var loadingText = $('#loadingText');
-  var cardGrid = $('#cardGrid');
-  var emptyState = $('#emptyState');
-  var emptyText = $('#emptyText');
-  var listCount = $('#listCount');
-  var clearAllBtn = $('#clearAllBtn');
-  var searchBar = $('#searchBar');
-  var searchInput = $('#searchInput');
-  var imageModal = $('#imageModal');
-  var modalImg = $('#modalImg');
-  var modalClose = $('#modalClose');
-  var newNbRow = $('#newNbRow');
-  var currentImageBase64 = null;
+  var MAX_IMAGE_BASE64 = 700000;
   var isProcessing = false;
+  var currentImageBase64 = null;
 
-  // ============ 侧边栏 ============
-  function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); }
-  function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); }
-  hamburgerBtn.addEventListener('click', openSidebar);
-  sidebarOverlay.addEventListener('click', closeSidebar);
+  // ===== Local cache =====
+  var notebooks = [];
+  var questions = [];
+  var activeNotebookId = null;
+  var apiKey = '';
 
-  // ============ 错题本渲染 ============
-  function getNbName(id) {
-    var d = loadData();
-    var nb = d.notebooks.find(function(n){ return n.id === id; });
-    return nb ? nb.name : '未知';
+  // ===== Init Supabase =====
+  function initSupabase() {
+    if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || !SUPABASE_URL) {
+      showToast('请先配置 Supabase 信息', 'error');
+      return false;
+    }
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    return true;
   }
-  function getNbCount(id) {
-    return loadData().mistakes.filter(function(m){ return m.notebookId === id; }).length;
+
+  // ===== Auth =====
+  var authMode = 'login';
+
+  window.switchAuthTab = function(mode) {
+    authMode = mode;
+    document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+    document.getElementById('tab-register').classList.toggle('active', mode === 'register');
+    document.getElementById('auth-submit').textContent = mode === 'login' ? '登录' : '注册';
+    document.getElementById('auth-error').classList.remove('show');
+  };
+
+  window.handleAuth = async function() {
+    var email = document.getElementById('auth-email').value.trim();
+    var password = document.getElementById('auth-password').value;
+    var errEl = document.getElementById('auth-error');
+    errEl.classList.remove('show');
+
+    if (!email || !password) { errEl.textContent = '请填写邮箱和密码'; errEl.classList.add('show'); return; }
+    if (password.length < 6) { errEl.textContent = '密码至少6位'; errEl.classList.add('show'); return; }
+
+    var btn = document.getElementById('auth-submit');
+    btn.disabled = true; btn.textContent = '处理中...';
+
+    try {
+      if (!supabaseClient && !initSupabase()) return;
+      var result;
+      if (authMode === 'register') {
+        result = await supabaseClient.auth.signUp({ email: email, password: password });
+      } else {
+        result = await supabaseClient.auth.signInWithPassword({ email: email, password: password });
+      }
+      if (result.error) throw result.error;
+      if (authMode === 'register' && result.data.user && !result.data.session) {
+        errEl.textContent = '注册成功！请去邮箱确认后登录';
+        errEl.classList.add('show');
+        switchAuthTab('login');
+      }
+    } catch(e) {
+      errEl.textContent = e.message || '操作失败';
+      errEl.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = authMode === 'login' ? '登录' : '注册';
+    }
+  };
+
+  window.handleLogout = async function() {
+    if (!confirm('确定退出登录？')) return;
+    if (supabaseClient) await supabaseClient.auth.signOut();
+    currentUser = null;
+    showAuth();
+  };
+
+  function showAuth() {
+    document.getElementById('auth-section').style.display = 'flex';
+    document.getElementById('app-section').style.display = 'none';
   }
-  function renderSidebar() {
-    var d = loadData();
-    sidebarNotebooks.innerHTML = '';
+
+  function showApp() {
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('app-section').style.display = 'block';
+    loadAllData();
+  }
+
+  // ===== Data Layer (Supabase) =====
+  async function loadAllData() {
+    await Promise.all([loadNotebooks(), loadQuestions(), loadSettings()]);
+    renderNotebookList();
+    renderQuestionList();
+    renderStats();
+  }
+
+  async function loadNotebooks() {
+    if (!supabaseClient || !currentUser) return;
+    var { data, error } = await supabaseClient
+      .from('notebooks')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: true });
+    if (error) { console.error('加载错题本失败:', error); return; }
+    notebooks = data || [];
+    if (notebooks.length === 0) {
+      await createNotebook('默认错题本');
+    }
+  }
+
+  async function loadQuestions() {
+    if (!supabaseClient || !currentUser) return;
+    var { data, error } = await supabaseClient
+      .from('questions')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false });
+    if (error) { console.error('加载错题失败:', error); return; }
+    questions = data || [];
+  }
+
+  async function loadSettings() {
+    if (!supabaseClient || !currentUser) return;
+    var { data, error } = await supabaseClient
+      .from('user_settings')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .single();
+    if (data && data.deepseek_api_key) {
+      apiKey = data.deepseek_api_key;
+      document.getElementById('api-key-input').value = apiKey;
+      updateSettingsStatus(true);
+    } else {
+      apiKey = '';
+      updateSettingsStatus(false);
+    }
+  }
+
+  async function createNotebook(name) {
+    if (!supabaseClient || !currentUser) return;
+    var { data, error } = await supabaseClient
+      .from('notebooks')
+      .insert({ user_id: currentUser.id, name: name })
+      .select()
+      .single();
+    if (error) { console.error('创建错题本失败:', error); showToast('创建失败', 'error'); return null; }
+    notebooks.push(data);
+    renderNotebookList();
+    return data;
+  }
+
+  async function deleteNotebook(id) {
+    if (!supabaseClient || !currentUser) return;
+    // 先删除该错题本下的所有错题
+    await supabaseClient.from('questions').delete().eq('notebook_id', id).eq('user_id', currentUser.id);
+    var { error } = await supabaseClient.from('notebooks').delete().eq('id', id).eq('user_id', currentUser.id);
+    if (error) { showToast('删除失败', 'error'); return; }
+    notebooks = notebooks.filter(function(n) { return n.id !== id; });
+    questions = questions.filter(function(q) { return q.notebook_id !== id; });
+    if (activeNotebookId === id) activeNotebookId = null;
+    renderNotebookList();
+    renderQuestionList();
+    renderStats();
+    showToast('已删除');
+  }
+
+  async function saveQuestion(nbId, imgB64, ocrText, subject, kps, difficulty, analysis, errorReason, correctApproach) {
+    if (!supabaseClient || !currentUser) return;
+    var insertData = {
+      user_id: currentUser.id,
+      notebook_id: nbId,
+      image_base64: imgB64,
+      ocr_text: ocrText,
+      subject: subject,
+      knowledge_points: kps,
+      difficulty: difficulty,
+      analysis: analysis,
+      error_reason: errorReason || '',
+      correct_approach: correctApproach || '',
+      review_count: 0
+    };
+    var { data, error } = await supabaseClient
+      .from('questions')
+      .insert(insertData)
+      .select()
+      .single();
+    if (error) { console.error('保存失败:', error); showToast('保存失败', 'error'); return; }
+    questions.unshift(data);
+    renderNotebookList();
+    renderQuestionList();
+    renderStats();
+  }
+
+  async function deleteQuestion(id) {
+    if (!supabaseClient || !currentUser) return;
+    var { error } = await supabaseClient.from('questions').delete().eq('id', id).eq('user_id', currentUser.id);
+    if (error) { showToast('删除失败', 'error'); return; }
+    questions = questions.filter(function(q) { return q.id !== id; });
+    renderNotebookList();
+    renderQuestionList();
+    renderStats();
+    showToast('已删除');
+  }
+
+  window.saveApiKey = async function() {
+    var key = document.getElementById('api-key-input').value.trim();
+    if (!supabaseClient || !currentUser) return;
+    var { error } = await supabaseClient
+      .from('user_settings')
+      .upsert({ user_id: currentUser.id, deepseek_api_key: key, updated_at: new Date().toISOString() });
+    if (error) { showToast('保存失败', 'error'); return; }
+    apiKey = key;
+    updateSettingsStatus(!!key);
+    showToast('API Key 已保存', 'success');
+  };
+
+  function updateSettingsStatus(hasKey) {
+    var el = document.getElementById('api-key-status');
+    if (hasKey) { el.textContent = '✓ 已配置'; el.className = 'status saved'; }
+    else { el.textContent = '未配置'; el.className = 'status empty'; }
+  }
+
+  // ===== View Switching =====
+  window.switchView = function(view) {
+    document.querySelectorAll('.view-tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.view === view);
+    });
+    document.querySelectorAll('.view-panel').forEach(function(p) {
+      p.classList.toggle('active', p.id === 'view-' + view);
+    });
+    if (view === 'stats') renderStats();
+  };
+
+  window.toggleSettings = function() {
+    document.getElementById('settings-panel').classList.toggle('open');
+  };
+
+  // ===== Sidebar =====
+  function renderNotebookList() {
+    var container = document.getElementById('notebook-list');
+    container.innerHTML = '';
     var allItem = document.createElement('div');
-    allItem.className = 'nb-item' + (d.activeNotebookId === null ? ' active' : '');
-    allItem.innerHTML = '<span class="nb-icon">&#128451;</span><span class="nb-name">全部错题</span><span class="nb-badge">' + d.mistakes.length + '</span>';
-    allItem.addEventListener('click', function(){ setActive(null); });
-    sidebarNotebooks.appendChild(allItem);
-    d.notebooks.forEach(function(nb){
+    allItem.className = 'nb-item' + (activeNotebookId === null ? ' active' : '');
+    allItem.innerHTML = '<span class="nb-icon">📚</span><span class="nb-name">全部错题</span><span class="nb-badge">' + questions.length + '</span>';
+    allItem.onclick = function() { activeNotebookId = null; updatePageTitle(); renderNotebookList(); renderQuestionList(); closeSidebar(); };
+    container.appendChild(allItem);
+
+    notebooks.forEach(function(nb) {
+      var count = questions.filter(function(q) { return q.notebook_id === nb.id; }).length;
       var item = document.createElement('div');
-      item.className = 'nb-item' + (d.activeNotebookId === nb.id ? ' active' : '');
-      var count = getNbCount(nb.id);
-      item.innerHTML =
-        '<span class="nb-icon">&#128213;</span>' +
-        '<span class="nb-name">' + escapeHtml(nb.name) + '</span>' +
+      item.className = 'nb-item' + (activeNotebookId === nb.id ? ' active' : '');
+      item.innerHTML = '<span class="nb-icon">📖</span><span class="nb-name">' + esc(nb.name) + '</span>' +
         '<span class="nb-badge">' + count + '</span>' +
-        '<span class="nb-delete" title="删除错题本">&times;</span>';
-      item.querySelector('.nb-delete').addEventListener('click', function(e){
-        e.stopPropagation(); delNotebook(nb.id);
-      });
-      item.addEventListener('click', function(e){
-        if (e.target.classList.contains('nb-delete')) return;
-        setActive(nb.id);
-      });
-      sidebarNotebooks.appendChild(item);
+        '<span class="nb-delete" title="删除" data-nb-id="' + nb.id + '">✕</span>';
+      item.querySelector('.nb-name').onclick = function() { activeNotebookId = nb.id; updatePageTitle(); renderNotebookList(); renderQuestionList(); closeSidebar(); };
+      item.querySelector('.nb-icon').onclick = function() { activeNotebookId = nb.id; updatePageTitle(); renderNotebookList(); renderQuestionList(); closeSidebar(); };
+      item.querySelector('.nb-delete').onclick = function(e) {
+        e.stopPropagation();
+        if (confirm('确定删除「' + nb.name + '」及其所有错题？')) deleteNotebook(nb.id);
+      };
+      container.appendChild(item);
     });
   }
-  function setActive(nbId) {
-    var d = loadData(); d.activeNotebookId = nbId; saveData(d); renderSidebar(); renderList();
-  }
-  function createNb(name) {
-    var d = loadData();
-    if (d.notebooks.some(function(n){ return n.name === name; })) { showToast('错题本名称已存在'); return false; }
-    d.notebooks.push({ id:generateId('nb_'), name:name, createdAt:new Date().toISOString() });
-    saveData(d); renderSidebar(); showToast('已创建「' + name + '」'); return true;
-  }
-  function delNotebook(nbId) {
-    var d = loadData();
-    var nb = d.notebooks.find(function(n){ return n.id === nbId; });
-    if (!nb) return;
-    var count = d.mistakes.filter(function(m){ return m.notebookId === nbId; }).length;
-    if (!confirm('确定删除错题本「' + nb.name + '」吗？\n其中的 ' + count + ' 条错题也将一并删除，不可恢复。')) return;
-    d.notebooks = d.notebooks.filter(function(n){ return n.id !== nbId; });
-    d.mistakes = d.mistakes.filter(function(m){ return m.notebookId !== nbId; });
-    if (d.activeNotebookId === nbId) d.activeNotebookId = null;
-    saveData(d); renderSidebar(); renderList(); showToast('已删除「' + nb.name + '」');
-  }
-  function showNewNbInput() {
-    newNbRow.innerHTML = '';
-    var div = document.createElement('div'); div.className = 'new-nb-row';
-    var inp = document.createElement('input'); inp.type = 'text'; inp.placeholder = '输入名称'; inp.maxLength = 20;
-    var btns = document.createElement('div'); btns.className = 'row-btns';
-    var ok = document.createElement('button'); ok.className = 'btn btn-primary btn-sm'; ok.textContent = '创建';
-    var cancel = document.createElement('button'); cancel.className = 'btn btn-outline btn-sm'; cancel.textContent = '取消';
-    function done() { newNbRow.innerHTML = ''; }
-    ok.addEventListener('click', function(){ var n = inp.value.trim(); if (!n) { showToast('请输入名称'); return; } if (createNb(n)) done(); });
-    cancel.addEventListener('click', done);
-    inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') ok.click(); if (e.key === 'Escape') done(); });
-    btns.appendChild(ok); btns.appendChild(cancel); div.appendChild(inp); div.appendChild(btns); newNbRow.appendChild(div); inp.focus();
-  }
-  sidebarAddBtn.addEventListener('click', showNewNbInput);
 
-  // ============ 设置面板 ============
-  settingsBtn.addEventListener('click', function(){ settingsPanel.classList.toggle('open'); });
-  function updateSettingsUI() {
-    var s = loadSettings(); apiKeyInput.value = s.apiKey || '';
-    if (s.apiKey) apiKeyStatus.innerHTML = '<span class="status saved">API Key 已保存</span>';
-    else { apiKeyStatus.innerHTML = '<span class="status empty">尚未设置 API Key，AI 知识点分析功能不可用</span>'; settingsPanel.classList.add('open'); }
+  function updatePageTitle() {
+    var title = document.getElementById('page-title');
+    var sub = document.getElementById('page-subtitle');
+    if (activeNotebookId === null) {
+      title.textContent = '全部错题';
+      sub.textContent = '';
+    } else {
+      var nb = notebooks.find(function(n) { return n.id === activeNotebookId; });
+      title.textContent = nb ? nb.name : '错题本';
+      var count = questions.filter(function(q) { return q.notebook_id === activeNotebookId; }).length;
+      sub.textContent = count + ' 道错题';
+    }
   }
-  saveApiKeyBtn.addEventListener('click', function(){
-    var k = apiKeyInput.value.trim(); saveSettings({ apiKey: k }); updateSettingsUI();
-    showToast(k ? 'API Key 已保存' : 'API Key 已清除');
+
+  document.getElementById('add-nb-btn').addEventListener('click', async function() {
+    var name = prompt('错题本名称：');
+    if (!name || !name.trim()) return;
+    await createNotebook(name.trim());
   });
 
-  // ============ 列表渲染 ============
-  function getSearchKw() { return (searchInput.value||'').trim().toLowerCase(); }
-  function renderList() {
-    var d = loadData(); var kw = getSearchKw();
-    var filtered = d.mistakes;
-    if (d.activeNotebookId !== null) { filtered = filtered.filter(function(m){ return m.notebookId === d.activeNotebookId; }); }
-    var searched = kw
-      ? filtered.filter(function(m){
-          var h = [m.ocrText||'', m.subject||'', m.analysis||'', (m.knowledgePoints||[]).join(' '), getNbName(m.notebookId)].join(' ').toLowerCase();
-          return h.indexOf(kw) !== -1;
-        })
-      : filtered;
-    searchBar.style.display = d.mistakes.length > 0 ? 'block' : 'none';
-    cardGrid.innerHTML = '';
-    listCount.textContent = kw ? '（匹配 ' + searched.length + ' / ' + filtered.length + ' 条）' : '（' + filtered.length + ' 条）';
+  function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('show');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+  }
+  window.openSidebar = openSidebar;
+  window.closeSidebar = closeSidebar;
+
+  // ===== Question List =====
+  function renderQuestionList() {
+    var grid = document.getElementById('card-grid');
+    var emptyState = document.getElementById('empty-state');
+    var emptyText = document.getElementById('empty-text');
+    var clearBtn = document.getElementById('clear-all-btn');
+    var searchVal = document.getElementById('search-input').value.trim().toLowerCase();
+
+    var filtered = activeNotebookId === null ? questions : questions.filter(function(q) { return q.notebook_id === activeNotebookId; });
+    var searched = searchVal ? filtered.filter(function(q) {
+      return (q.ocr_text || '').toLowerCase().includes(searchVal) ||
+        (q.subject || '').toLowerCase().includes(searchVal) ||
+        (q.analysis || '').toLowerCase().includes(searchVal) ||
+        (q.error_reason || '').toLowerCase().includes(searchVal) ||
+        parseKP(q.knowledge_points).some(function(kp) { return kp.toLowerCase().includes(searchVal); });
+    }) : filtered;
+
+    grid.innerHTML = '';
     if (searched.length === 0) {
       emptyState.style.display = 'block';
-      if (kw) emptyText.textContent = '暂无匹配错题，试试其他关键词';
-      else if (filtered.length === 0) emptyText.textContent = d.activeNotebookId !== null ? '该错题本中还没有错题' : '还没有错题，上传第一张截图开始吧';
-      else emptyText.textContent = '暂无错题';
-      clearAllBtn.style.display = 'none';
+      emptyText.textContent = searchVal ? '暂无匹配，试试其他关键词' : '还没有错题，上传截图开始吧';
+      clearBtn.style.display = 'none';
     } else {
-      emptyState.style.display = 'none'; clearAllBtn.style.display = 'inline-flex';
-      clearAllBtn.textContent = d.activeNotebookId !== null ? '清空本错题本' : '清空全部';
+      emptyState.style.display = 'none';
+      clearBtn.style.display = 'inline-flex';
     }
-    searched.forEach(function(item){
+
+    searched.forEach(function(item) {
       var diffClass = item.difficulty === '简单' ? 'easy' : item.difficulty === '困难' ? 'hard' : '';
-      var kpTags = (item.knowledgePoints||[]).map(function(kp){ return '<span class="tag tag-kp">' + escapeHtml(kp) + '</span>'; }).join('');
-      var nbName = getNbName(item.notebookId);
-      var card = document.createElement('div'); card.className = 'mistake-card'; card.dataset.id = item.id;
+      var kps = parseKP(item.knowledge_points);
+      var kpTags = kps.map(function(kp) { return '<span class="tag tag-kp">' + esc(kp) + '</span>'; }).join('');
+      var nbName = getNbName(item.notebook_id);
+      var card = document.createElement('div');
+      card.className = 'mistake-card';
       card.innerHTML =
         '<div class="card-top">' +
-        '<img class="card-thumb" src="' + item.imageBase64 + '" alt="缩略图" data-full="' + item.imageBase64 + '">' +
+        '<img class="card-thumb" src="' + (item.image_base64 || '') + '" alt="缩略图">' +
         '<div class="card-info">' +
-        '<div class="card-ocr">' + escapeHtml(item.ocrText||'(未识别到文字)') + '</div>' +
+        '<div class="card-ocr">' + esc(item.ocr_text || '(未识别到文字)') + '</div>' +
         '<div class="card-meta">' +
-        '<span class="tag tag-notebook">' + escapeHtml(nbName) + '</span>' +
-        '<span class="tag tag-subject">' + escapeHtml(item.subject||'未知学科') + '</span>' +
-        '<span class="tag tag-difficulty ' + diffClass + '">' + escapeHtml(item.difficulty||'未知') + '</span>' +
+        '<span class="tag tag-notebook">' + esc(nbName) + '</span>' +
+        '<span class="tag tag-subject">' + esc(item.subject || '未知学科') + '</span>' +
+        '<span class="tag tag-difficulty ' + diffClass + '">' + esc(item.difficulty || '未知') + '</span>' +
         kpTags +
         '</div>' +
-        '<div class="card-analysis">' + escapeHtml(item.analysis||'暂无分析') + '</div>' +
-        '</div>' +
-        '</div>' +
+        '<div class="card-analysis">' + esc(item.analysis || '暂无分析') + '</div>' +
+        '</div></div>' +
         '<div class="card-bottom">' +
-        '<span class="card-time">' + formatDate(item.createdAt) + '</span>' +
-        '<div class="card-actions"><button class="btn btn-outline btn-sm card-del">删除</button></div>' +
-        '</div>';
-      cardGrid.appendChild(card);
-      card.querySelector('.card-thumb').addEventListener('click', function(){ showImageModal(this.dataset.full); });
-      card.querySelector('.card-del').addEventListener('click', function(){ delMistake(item.id); });
+        '<span class="card-time">' + formatDate(item.created_at) + '</span>' +
+        '<div class="card-actions">' +
+        '<button class="btn btn-outline btn-sm card-detail-btn">详情</button>' +
+        '<button class="btn btn-danger btn-sm card-del-btn">删除</button>' +
+        '</div></div>';
+      grid.appendChild(card);
+
+      card.querySelector('.card-thumb').addEventListener('click', function() {
+        showImageModal(item.image_base64);
+      });
+      card.querySelector('.card-detail-btn').addEventListener('click', function() {
+        showDetailModal(item);
+      });
+      card.querySelector('.card-del-btn').addEventListener('click', function() {
+        if (confirm('确定删除这道错题？')) deleteQuestion(item.id);
+      });
     });
   }
-  searchInput.addEventListener('input', renderList);
-  function delMistake(id) {
-    var d = loadData(); d.mistakes = d.mistakes.filter(function(m){ return m.id !== id; });
-    saveData(d); renderSidebar(); renderList(); showToast('已删除');
-  }
-  clearAllBtn.addEventListener('click', function(){
-    var d = loadData(); if (d.mistakes.length === 0) return;
-    if (d.activeNotebookId !== null) {
-      var nb = d.notebooks.find(function(n){ return n.id === d.activeNotebookId; });
-      var count = d.mistakes.filter(function(m){ return m.notebookId === d.activeNotebookId; }).length;
-      if (count === 0) return;
-      if (!confirm('确定清空「' + (nb?nb.name:'') + '」中 ' + count + ' 条错题？不可恢复。')) return;
-      d.mistakes = d.mistakes.filter(function(m){ return m.notebookId !== d.activeNotebookId; });
-    } else {
-      if (!confirm('确定清空全部 ' + d.mistakes.length + ' 条错题？不可恢复。')) return;
-      d.mistakes = [];
+
+  document.getElementById('search-input').addEventListener('input', renderQuestionList);
+
+  window.clearAll = async function() {
+    var filtered = activeNotebookId === null ? questions : questions.filter(function(q) { return q.notebook_id === activeNotebookId; });
+    if (filtered.length === 0) return;
+    var msg = activeNotebookId !== null ? '确定清空该错题本的所有错题？' : '确定清空全部错题？';
+    if (!confirm(msg)) return;
+    if (supabaseClient && currentUser) {
+      var query = supabaseClient.from('questions').delete().eq('user_id', currentUser.id);
+      if (activeNotebookId !== null) query = query.eq('notebook_id', activeNotebookId);
+      await query;
     }
-    saveData(d); renderSidebar(); renderList(); showToast('已清空');
+    if (activeNotebookId !== null) {
+      questions = questions.filter(function(q) { return q.notebook_id !== activeNotebookId; });
+    } else {
+      questions = [];
+    }
+    renderNotebookList(); renderQuestionList(); renderStats();
+    showToast('已清空', 'success');
+  };
+
+  // ===== Detail Modal =====
+  function showDetailModal(item) {
+    var kps = parseKP(item.knowledge_points);
+    var kpHtml = kps.map(function(kp) { return '<span class="tag tag-kp">' + esc(kp) + '</span>'; }).join('');
+    var nbName = getNbName(item.notebook_id);
+    var diffClass = item.difficulty === '简单' ? 'easy' : item.difficulty === '困难' ? 'hard' : '';
+    var html =
+      '<button class="modal-close" onclick="closeDetailModal()">&times;</button>' +
+      '<h3>错题详情</h3>' +
+      (item.image_base64 ? '<img class="detail-img" src="' + item.image_base64 + '" alt="原图">' : '') +
+      '<div class="detail-section"><h4>📝 OCR 识别文字</h4><p>' + esc(item.ocr_text || '无') + '</p></div>' +
+      '<div class="detail-section"><h4>🏷️ 分类信息</h4><div class="tag-row">' +
+      '<span class="tag tag-notebook">' + esc(nbName) + '</span>' +
+      '<span class="tag tag-subject">' + esc(item.subject || '未知') + '</span>' +
+      '<span class="tag tag-difficulty ' + diffClass + '">' + esc(item.difficulty || '未知') + '</span>' +
+      kpHtml + '</div></div>' +
+      '<div class="detail-section"><h4>🔍 AI 分析</h4><p>' + esc(item.analysis || '暂无') + '</p></div>' +
+      (item.error_reason ? '<div class="detail-section"><h4>❌ 错因分析</h4><p>' + esc(item.error_reason) + '</p></div>' : '') +
+      (item.correct_approach ? '<div class="detail-section"><h4>✅ 正确思路</h4><p>' + esc(item.correct_approach) + '</p></div>' : '') +
+      '<div class="detail-section" style="font-size:12px;color:var(--text-muted)">添加时间：' + formatDate(item.created_at) + '</div>';
+    document.getElementById('detail-content').innerHTML = html;
+    document.getElementById('detail-modal').classList.add('open');
+  }
+
+  window.closeDetailModal = function() {
+    document.getElementById('detail-modal').classList.remove('open');
+  };
+
+  document.getElementById('detail-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeDetailModal();
   });
 
-  // ============ 图片 Modal ============
-  function showImageModal(src) { modalImg.src = src; imageModal.style.display = 'flex'; }
-  function hideImageModal() { imageModal.style.display = 'none'; }
-  modalClose.addEventListener('click', hideImageModal);
-  imageModal.addEventListener('click', function(e){ if (e.target === imageModal) hideImageModal(); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') hideImageModal(); });
+  // ===== Stats =====
+  function renderStats() {
+    var grid = document.getElementById('stats-grid');
+    var charts = document.getElementById('stats-charts');
 
-  // ============ 图片压缩 ============
+    var total = questions.length;
+    var subjects = {};
+    var difficulties = { '简单': 0, '中等': 0, '困难': 0, '未知': 0 };
+    var nbStats = {};
+    var recentItems = questions.slice(0, 5);
+    var todayCount = 0;
+    var weekCount = 0;
+    var now = new Date();
+    var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    var weekStart = new Date(now.getTime() - 7 * 24 * 3600 * 1000).toISOString();
+
+    questions.forEach(function(q) {
+      subjects[q.subject || '未知'] = (subjects[q.subject || '未知'] || 0) + 1;
+      difficulties[q.difficulty || '未知'] = (difficulties[q.difficulty || '未知'] || 0) + 1;
+      var nbName = getNbName(q.notebook_id);
+      nbStats[nbName] = (nbStats[nbName] || 0) + 1;
+      if (q.created_at >= todayStart) todayCount++;
+      if (q.created_at >= weekStart) weekCount++;
+    });
+
+    grid.innerHTML =
+      '<div class="stat-card accent"><div class="stat-value">' + total + '</div><div class="stat-label">总错题数</div></div>' +
+      '<div class="stat-card"><div class="stat-value">' + todayCount + '</div><div class="stat-label">今日新增</div></div>' +
+      '<div class="stat-card"><div class="stat-value">' + weekCount + '</div><div class="stat-label">本周新增</div></div>' +
+      '<div class="stat-card"><div class="stat-value">' + Object.keys(subjects).length + '</div><div class="stat-label">涉及学科</div></div>';
+
+    // Subject chart
+    var maxSubject = Math.max.apply(null, Object.values(subjects).concat([1]));
+    var subjectBars = Object.entries(subjects).sort(function(a,b) { return b[1] - a[1]; }).map(function(entry) {
+      var pct = Math.round(entry[1] / maxSubject * 100);
+      return '<div class="bar-row"><span class="bar-label">' + esc(entry[0]) + '</span><div class="bar-track"><div class="bar-fill blue" style="width:' + pct + '%"><span class="bar-count">' + entry[1] + '</span></div></div></div>';
+    }).join('');
+
+    // Difficulty chart
+    var maxDiff = Math.max.apply(null, Object.values(difficulties).concat([1]));
+    var diffColors = { '简单': 'green', '中等': 'orange', '困难': 'red', '未知': 'blue' };
+    var diffBars = Object.entries(difficulties).filter(function(d) { return d[1] > 0; }).map(function(entry) {
+      var pct = Math.round(entry[1] / maxDiff * 100);
+      var color = diffColors[entry[0]] || 'blue';
+      return '<div class="bar-row"><span class="bar-label">' + esc(entry[0]) + '</span><div class="bar-track"><div class="bar-fill ' + color + '" style="width:' + pct + '%"><span class="bar-count">' + entry[1] + '</span></div></div></div>';
+    }).join('');
+
+    // Notebook chart
+    var maxNb = Math.max.apply(null, Object.values(nbStats).concat([1]));
+    var nbBars = Object.entries(nbStats).sort(function(a,b) { return b[1] - a[1]; }).map(function(entry) {
+      var pct = Math.round(entry[1] / maxNb * 100);
+      return '<div class="bar-row"><span class="bar-label">' + esc(entry[0]) + '</span><div class="bar-track"><div class="bar-fill purple" style="width:' + pct + '%"><span class="bar-count">' + entry[1] + '</span></div></div></div>';
+    }).join('');
+
+    // Recent items
+    var recentHtml = recentItems.map(function(q) {
+      var dotColor = q.difficulty === '困难' ? '#ef4444' : q.difficulty === '简单' ? '#10b981' : '#f59e0b';
+      return '<div class="recent-item"><span class="ri-dot" style="background:' + dotColor + '"></span><span class="ri-text">' + esc((q.ocr_text || '').slice(0, 40)) + '</span><span class="ri-time">' + formatDate(q.created_at) + '</span></div>';
+    }).join('');
+
+    charts.innerHTML =
+      '<div class="chart-card"><h3>📊 学科分布</h3><div class="bar-chart">' + (subjectBars || '<div style="color:var(--text-muted);font-size:13px">暂无数据</div>') + '</div></div>' +
+      '<div class="chart-card"><h3>📈 难度分布</h3><div class="bar-chart">' + (diffBars || '<div style="color:var(--text-muted);font-size:13px">暂无数据</div>') + '</div></div>' +
+      '<div class="chart-card"><h3>📒 错题本分布</h3><div class="bar-chart">' + (nbBars || '<div style="color:var(--text-muted);font-size:13px">暂无数据</div>') + '</div></div>' +
+      '<div class="chart-card"><h3>🕐 最近错题</h3><div class="recent-list">' + (recentHtml || '<div style="color:var(--text-muted);font-size:13px">暂无</div>') + '</div></div>';
+  }
+
+  // ===== Upload & Analyze =====
+  var uploadZone = document.getElementById('upload-zone');
+  var fileInput = document.getElementById('file-input');
+  var previewArea = document.getElementById('preview-area');
+  var previewImg = document.getElementById('preview-img');
+  var previewSize = document.getElementById('preview-size');
+  var loadingArea = document.getElementById('loading-area');
+  var loadingText = document.getElementById('loading-text');
+
+  uploadZone.addEventListener('click', function(e) { if (e.target === fileInput) return; fileInput.click(); });
+  fileInput.addEventListener('change', function() { if (fileInput.files.length > 0) handleFile(fileInput.files[0]); });
+  uploadZone.addEventListener('dragover', function(e) { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+  uploadZone.addEventListener('dragleave', function(e) { e.preventDefault(); uploadZone.classList.remove('drag-over'); });
+  uploadZone.addEventListener('drop', function(e) {
+    e.preventDefault(); uploadZone.classList.remove('drag-over');
+    if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+  });
+
+  function handleFile(file) {
+    if (isProcessing) { showToast('正在处理中'); return; }
+    if (!file.type.match(/image\/(jpeg|png|webp)/)) { showToast('仅支持 JPG/PNG/WebP'); return; }
+    if (file.size > 10 * 1024 * 1024) { showToast('文件不能超过 10MB'); return; }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      currentImageBase64 = e.target.result;
+      previewImg.src = currentImageBase64;
+      previewSize.textContent = '大小：' + formatBytes(file.size);
+      previewArea.classList.add('active');
+      loadingArea.classList.remove('active');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  window.resetPreview = function() {
+    currentImageBase64 = null; previewImg.src = '';
+    previewArea.classList.remove('active'); loadingArea.classList.remove('active');
+    fileInput.value = '';
+  };
+
   function compressImage(base64, maxW, quality) {
-    return new Promise(function(resolve){
+    return new Promise(function(resolve) {
       var img = new Image();
-      img.onload = function(){
+      img.onload = function() {
         var w = img.width, h = img.height;
         if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
         var c = document.createElement('canvas'); c.width = w; c.height = h;
         c.getContext('2d').drawImage(img, 0, 0, w, h);
         resolve(c.toDataURL('image/jpeg', quality));
       };
-      img.onerror = function(){ resolve(base64); };
+      img.onerror = function() { resolve(base64); };
       img.src = base64;
     });
   }
+
   async function ensureImageSize(b64) {
     var r = b64;
     if (b64.length > MAX_IMAGE_BASE64) r = await compressImage(b64, 1200, 0.7);
@@ -660,47 +1061,22 @@ body {
     return r;
   }
 
-  // ============ 上传处理 ============
-  function handleFile(file) {
-    if (isProcessing) { showToast('正在处理中，请稍候'); return; }
-    if (!file.type.match(/image\/(jpeg|png|webp)/)) { showToast('仅支持 JPG / PNG / WebP'); return; }
-    if (file.size > 10 * 1024 * 1024) { showToast('文件不能超过 10MB'); return; }
-    var d = loadData();
-    if (d.notebooks.length === 0) {
-      d.notebooks.push({ id:generateId('nb_'), name:'默认错题本', createdAt:new Date().toISOString() });
-      saveData(d); renderSidebar();
-    }
-    var reader = new FileReader();
-    reader.onload = function(e){
-      currentImageBase64 = e.target.result;
-      previewImg.src = currentImageBase64;
-      previewSize.textContent = '大小：' + formatBytes(file.size);
-      previewArea.classList.add('active');
-      loadingArea.classList.remove('active');
-      startAnalyzeBtn.disabled = false;
-    };
-    reader.readAsDataURL(file);
-  }
-  function resetPreview() {
-    currentImageBase64 = null; previewImg.src = '';
-    previewArea.classList.remove('active'); loadingArea.classList.remove('active'); fileInput.value = '';
-  }
-
-  // ============ 分析流程：EasyOCR → DeepSeek ============
-  async function doAnalyze() {
+  window.doAnalyze = async function() {
     if (!currentImageBase64) return;
-    var d = loadData();
-    var targetNbId = d.activeNotebookId;
-    if (targetNbId === null && d.notebooks.length > 0) targetNbId = d.notebooks[0].id;
+    var targetNbId = activeNotebookId;
+    if (!targetNbId && notebooks.length > 0) targetNbId = notebooks[0].id;
     if (!targetNbId) { showToast('请先创建或选择一个错题本'); return; }
-    isProcessing = true; startAnalyzeBtn.disabled = true; loadingArea.classList.add('active');
+
+    isProcessing = true;
+    document.getElementById('analyze-btn').disabled = true;
+    loadingArea.classList.add('active');
+
     try {
-      // === 阶段1: EasyOCR ===
-      loadingText.textContent = '正在 OCR 识别...';
-      // 先压缩图片再上传，避免超出Vercel请求限制
+      // Step 1: Compress
       loadingText.textContent = '正在压缩图片...';
       var compressedForOCR = await ensureImageSize(currentImageBase64);
-      
+
+      // Step 2: OCR
       loadingText.textContent = '正在 OCR 识别...';
       var ocrResp = await fetch('/api/ocr', {
         method: 'POST',
@@ -709,41 +1085,54 @@ body {
       });
       if (!ocrResp.ok) {
         var errBody = await ocrResp.text();
-        throw new Error('OCR服务返回错误 (' + ocrResp.status + '): ' + errBody.slice(0, 200));
+        throw new Error('OCR 服务错误 (' + ocrResp.status + '): ' + errBody.slice(0, 200));
       }
       var ocrData = await ocrResp.json();
       var ocrText = '';
       if (ocrData && ocrData.text) { ocrText = ocrData.text.trim(); }
-      else if (ocrData && Array.isArray(ocrData.words)) { ocrText = ocrData.words.map(function(w){ return typeof w === 'string' ? w : (w.text || ''); }).join('\n'); }
-      else if (ocrData && Array.isArray(ocrData)) { ocrText = ocrData.map(function(w){ return typeof w === 'string' ? w : (w.text || ''); }).join('\n'); }
       else if (typeof ocrData === 'string') { ocrText = ocrData.trim(); }
-      else { ocrText = ''; }
       if (!ocrText) {
         showToast('未识别到文字，请确认截图清晰度');
-        isProcessing = false; startAnalyzeBtn.disabled = false; loadingArea.classList.remove('active'); return;
+        isProcessing = false; document.getElementById('analyze-btn').disabled = false; loadingArea.classList.remove('active'); return;
       }
 
-      // === 阶段2: DeepSeek 知识点分析 ===
-      var settings = loadSettings();
-      if (!settings.apiKey) {
-        saveMistake(targetNbId, currentImageBase64, ocrText, '未知', [], '未知', '（未配置 DeepSeek API Key，跳过 AI 分析）');
-        showToast('OCR 识别完成（未配置 API Key，跳过知识点分析）');
-        isProcessing = false; resetPreview(); return;
+      // Step 3: AI Analysis
+      if (!apiKey) {
+        await saveQuestion(targetNbId, compressedForOCR, ocrText, '未知', [], '未知', '（未配置 API Key，跳过分析）', '', '');
+        showToast('OCR 完成（未配置 API Key）');
+        resetPreview();
+        isProcessing = false; document.getElementById('analyze-btn').disabled = false; loadingArea.classList.remove('active'); return;
       }
-      loadingText.textContent = '正在 AI 分析知识点...';
-      var analysisPrompt = '请根据以下OCR识别的题目文字内容，判断题目所属的学科、涉及的知识点、难度（简单/中等/困难），并给出简要分析。\n\n题目文字：\n"""\n' + ocrText + '\n"""\n\n请严格按以下 JSON 格式返回（不要加 markdown 代码块标记，只返回纯 JSON）：\n{\n  "subject": "学科名称",\n  "knowledgePoints": ["知识点1", "知识点2"],\n  "difficulty": "简单/中等/困难",\n  "analysis": "简要分析（100字以内）"\n}\n\n注意：knowledgePoints 至少1个最多3个，只写最核心的知识点。';
+
+      loadingText.textContent = '正在 AI 分析...';
+      var analysisPrompt = '你是一位专业的教育学辅导老师。请根据以下题目内容，进行深度分析。\n\n' +
+        '题目文字：\n"""\n' + ocrText + '\n"""\n\n' +
+        '请严格按以下 JSON 格式返回（不要加 markdown 代码块，只返回纯 JSON）：\n' +
+        '{\n' +
+        '  "subject": "学科名称",\n' +
+        '  "knowledgePoints": ["知识点1", "知识点2"],\n' +
+        '  "difficulty": "简单/中等/困难",\n' +
+        '  "analysis": "题目的核心考点和解题关键（100字以内）",\n' +
+        '  "errorReason": "学生可能做错的常见原因分析（80字以内）",\n' +
+        '  "correctApproach": "正确的解题思路和步骤（150字以内）"\n' +
+        '}\n\n' +
+        '注意：\n' +
+        '- knowledgePoints 列出1-3个最核心知识点\n' +
+        '- errorReason 要具体，不要泛泛而谈\n' +
+        '- correctApproach 要给出可操作的步骤';
+
       var aiResp = await fetch(DEEPSEEK_API, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + settings.apiKey },
-        body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'user', content: analysisPrompt }], temperature: 0.3, max_tokens: 800 })
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+        body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'user', content: analysisPrompt }], temperature: 0.3, max_tokens: 1000 })
       });
       if (!aiResp.ok) {
         var errText = await aiResp.text();
         var errMsg = 'API 失败 (' + aiResp.status + ')';
-        if (aiResp.status === 401) errMsg = 'API Key 无效，请检查设置';
+        if (aiResp.status === 401) errMsg = 'API Key 无效';
         else if (aiResp.status === 402) errMsg = 'API 余额不足';
-        else if (aiResp.status === 429) errMsg = '请求过于频繁，请稍后重试';
-        throw new Error(errMsg + (errText ? '：' + errText.slice(0,200) : ''));
+        else if (aiResp.status === 429) errMsg = '请求过于频繁，请稍后';
+        throw new Error(errMsg);
       }
       var aiData = await aiResp.json();
       var content = (aiData.choices && aiData.choices[0] && aiData.choices[0].message && aiData.choices[0].message.content) || '';
@@ -753,57 +1142,112 @@ body {
         var m = content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/) || content.match(/\{[\s\S]*\}/);
         if (m) { try { parsed = JSON.parse(m[0] || m[1]); } catch(e2) {} }
       }
+
       var subject = (parsed && parsed.subject) ? parsed.subject : '未知';
       var kps = (parsed && Array.isArray(parsed.knowledgePoints)) ? parsed.knowledgePoints : [];
       var difficulty = (parsed && parsed.difficulty) ? parsed.difficulty : '未知';
-      var analysis = (parsed && parsed.analysis) ? parsed.analysis : content.slice(0, 200);
+      var analysis = (parsed && parsed.analysis) ? parsed.analysis : '';
+      var errorReason = (parsed && parsed.errorReason) ? parsed.errorReason : '';
+      var correctApproach = (parsed && parsed.correctApproach) ? parsed.correctApproach : '';
 
-      // 压缩图片
-      loadingText.textContent = '正在压缩图片...';
-      var compressedImg = await ensureImageSize(currentImageBase64);
-
-      // 保存
+      // Save
       loadingText.textContent = '正在保存...';
-      saveMistake(targetNbId, compressedImg, ocrText, subject, kps, difficulty, analysis);
-      showToast('分析完成！错题已保存');
+      var compressedImg = await ensureImageSize(currentImageBase64);
+      await saveQuestion(targetNbId, compressedImg, ocrText, subject, kps, difficulty, analysis, errorReason, correctApproach);
+      showToast('分析完成，已保存！', 'success');
       resetPreview();
     } catch(err) {
       console.error(err);
-      showToast('分析失败：' + (err.message || '网络错误'));
+      showToast('分析失败：' + (err.message || '网络错误'), 'error');
     } finally {
-      isProcessing = false; startAnalyzeBtn.disabled = false; loadingArea.classList.remove('active');
+      isProcessing = false;
+      document.getElementById('analyze-btn').disabled = false;
+      loadingArea.classList.remove('active');
     }
-  }
-  function saveMistake(nbId, imgB64, ocrText, subject, kps, difficulty, analysis) {
-    var mistake = {
-      id: generateId('mb_'), notebookId: nbId, imageBase64: imgB64, ocrText: ocrText,
-      subject: subject, knowledgePoints: kps, difficulty: difficulty, analysis: analysis,
-      createdAt: new Date().toISOString()
-    };
-    var d = loadData(); d.mistakes.unshift(mistake); saveData(d); renderSidebar(); renderList();
-  }
+  };
 
-  // ============ 上传事件 ============
-  uploadZone.addEventListener('click', function(e){ if (e.target === fileInput) return; fileInput.click(); });
-  fileInput.addEventListener('change', function(){ if (fileInput.files.length > 0) handleFile(fileInput.files[0]); });
-  uploadZone.addEventListener('dragover', function(e){ e.preventDefault(); uploadZone.classList.add('drag-over'); });
-  uploadZone.addEventListener('dragleave', function(e){ e.preventDefault(); uploadZone.classList.remove('drag-over'); });
-  uploadZone.addEventListener('drop', function(e){
-    e.preventDefault(); uploadZone.classList.remove('drag-over');
-    if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+  // ===== Image Modal =====
+  function showImageModal(src) {
+    document.getElementById('modal-img').src = src;
+    document.getElementById('image-modal').classList.add('open');
+  }
+  document.getElementById('image-modal').addEventListener('click', function() {
+    this.classList.remove('open');
   });
-  startAnalyzeBtn.addEventListener('click', doAnalyze);
-  cancelPreviewBtn.addEventListener('click', resetPreview);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.getElementById('image-modal').classList.remove('open');
+      closeDetailModal();
+    }
+  });
 
-  // ============ 初始化 ============
-  var initData = loadData();
-  if (initData.notebooks.length === 0) {
-    initData.notebooks.push({ id: generateId('nb_'), name: '默认错题本', createdAt: new Date().toISOString() });
-    saveData(initData);
+  // ===== Helpers =====
+  function esc(s) {
+    var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML;
   }
-  updateSettingsUI(); renderSidebar(); renderList();
-  if (!loadSettings().apiKey) settingsPanel.classList.add('open');
-  console.log('晓彤的错题本已就绪（EasyOCR + DeepSeek）');
+  function formatBytes(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+    return (b / 1048576).toFixed(1) + ' MB';
+  }
+  function formatDate(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+  function pad(n) { return n < 10 ? '0' + n : n; }
+  function parseKP(kp) {
+    if (!kp) return [];
+    if (Array.isArray(kp)) return kp;
+    try { var p = JSON.parse(kp); return Array.isArray(p) ? p : []; } catch(e) { return []; }
+  }
+  function getNbName(nbId) {
+    var nb = notebooks.find(function(n) { return n.id === nbId; });
+    return nb ? nb.name : '未知';
+  }
+
+  // ===== Toast =====
+  var toastTimer = null;
+  function showToast(msg, type) {
+    var el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast' + (type ? ' ' + type : '');
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { el.classList.remove('show'); }, 2500);
+  }
+
+  // ===== Auth State Listener =====
+  function init() {
+    if (!initSupabase()) {
+      // Show auth even if Supabase not configured - user will see error
+    }
+
+    supabaseClient.auth.onAuthStateChange(function(event, session) {
+      if (session && session.user) {
+        currentUser = session.user;
+        showApp();
+      } else {
+        currentUser = null;
+        showAuth();
+      }
+    });
+
+    // Check current session
+    supabaseClient.auth.getSession().then(function(result) {
+      var session = result.data.session;
+      if (session && session.user) {
+        currentUser = session.user;
+        showApp();
+      } else {
+        showAuth();
+      }
+    }).catch(function() {
+      showAuth();
+    });
+  }
+
+  init();
 })();
 </script>
 </body>
