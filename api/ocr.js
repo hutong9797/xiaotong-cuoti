@@ -1,6 +1,6 @@
-import fetch from 'node-fetch';
+const fetch = require('node-fetch');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const errText = await response.text();
-      return res.status(502).json({ error: 'OCR.space request failed: ' + response.status + ' ' + errText.slice(0,300) });
+      return res.status(502).json({ error: 'OCR.space failed: ' + response.status });
     }
 
     const data = await response.json();
@@ -44,11 +44,11 @@ export default async function handler(req, res) {
       const parsedText = data.ParsedResults[0].ParsedText || '';
       return res.status(200).json({ text: parsedText });
     } else if (data && data.IsErroredOnProcessing) {
-      return res.status(500).json({ error: data.ErrorMessage || 'OCR processing error' });
+      return res.status(500).json({ error: data.ErrorMessage || 'OCR error' });
     } else {
       return res.status(200).json({ text: '' });
     }
   } catch (error) {
     return res.status(500).json({ error: 'Server error: ' + error.message });
   }
-}
+};
