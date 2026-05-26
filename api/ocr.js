@@ -20,7 +20,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing image field' });
     }
 
-    // 使用 OCR.space 免费 API
     const params = new URLSearchParams();
     params.append('base64Image', image);
     params.append('language', 'chs');
@@ -34,17 +33,22 @@ export default async function handler(req, res) {
       body: params,
     });
 
+    if (!response.ok) {
+      const errText = await response.text();
+      return res.status(502).json({ error: 'OCR.space request failed: ' + response.status + ' ' + errText.slice(0,300) });
+    }
+
     const data = await response.json();
 
     if (data && data.ParsedResults && data.ParsedResults.length > 0) {
       const parsedText = data.ParsedResults[0].ParsedText || '';
       return res.status(200).json({ text: parsedText });
-    } else if (data && data.ErrorMessage) {
-      return res.status(500).json({ error: data.ErrorMessage });
+    } else if (data && data.IsErroredOnProcessing) {
+      return res.status(500).json({ error: data.ErrorMessage || 'OCR processing error' });
     } else {
       return res.status(200).json({ text: '' });
     }
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: 'Server error: ' + error.message });
   }
 }
